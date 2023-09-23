@@ -1,34 +1,22 @@
-﻿using ErrorHandling.Public;
-using ErrorHandling.Core;
-using ConsoleApp.SupervisorExtensions;
+﻿using ErrorHandling.Core.Evaluation;
+
 
 namespace ConsoleApp.ValueTypes;
 
-public enum CreateNameFlags
-{
-    NameStringValueIsNull,
-    NameStringValueIsEmpty,
-    NameStringValueMaxLengthExceeded,
-    NameStringValueStartsWithLowerCaseChar
-}
-
 public struct Name
 {
-    public const int MaxLength = 10;
+    public const int MaxLength = 4;
     public string StringValue { get; set; }
 
-    public static IResult<Name> Create(string stringValue) =>
-        Supervision.Init()
-        .Supervise(stringValue)
-        .IfNullAttach(CreateNameFlags.NameStringValueIsNull)
-        .CaptureAll()
-            .Check(Incompliance.StringIsEmpty)
-            .OnErrorAttach(CreateNameFlags.NameStringValueIsEmpty)
-            .Check(Incompliance.StringExceedsLength, MaxLength)
-            .OnErrorAttach(CreateNameFlags.NameStringValueMaxLengthExceeded)
-            .Check(Incompliance.StringStartsWithLower)
-            .OnErrorAttach(CreateNameFlags.NameStringValueStartsWithLowerCaseChar)
-        .Finalize()
-        .YieldResult<Name>()
-        .Bind(() => new() { StringValue = stringValue });
+    public static void Test(string stringValue)
+    {
+        Evaluation.Init()
+            .Evaluate(stringValue)
+            .CaptureAll()
+                .Examine(in Incompliance.NameIsEmpty)
+                .Examine(in Incompliance.NameStartsWithLowerCase)
+                .Examine(in Incompliance.NameExceedsLength, MaxLength)
+        .YieldResult(stringValue)
+        .ToString();
+    }
 }

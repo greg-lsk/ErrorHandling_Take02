@@ -1,8 +1,8 @@
 ﻿namespace ErrorHandling.Public;
 
-public class Incompliance
+public partial class IncomplianceDelegate
 {
     public static bool StringIsEmpty(string param) => param == string.Empty;
     public static bool StringExceedsLength(string param, int length) => param.Length > length;
-    public static bool StringStartsWithLower(string param) => char.IsLower(param[0]);
+    public static bool StringStartsWithLowerCase(string param) => char.IsLower(param[0]);
 }

@@ -15,4 +15,8 @@
     <ProjectReference Include="..\ErrorHandling\ErrorHandling.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\" />
+  </ItemGroup>
+
 </Project>

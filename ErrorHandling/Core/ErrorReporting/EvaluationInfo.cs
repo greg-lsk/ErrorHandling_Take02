@@ -1,12 +1,12 @@
-﻿namespace ErrorHandling.Core;
+﻿namespace ErrorHandling.Core.ErrorReporting;
 
-internal readonly struct CallerInfo
+internal readonly struct EvaluationInfo
 {
     private readonly string _callerFilePath;
     private readonly string _callerMethodName;
     private readonly int _callerLineNumber;
 
-    internal CallerInfo(string callerFilePath, string callerMethodName, int callerLineNumber)
+    internal EvaluationInfo(string callerFilePath, string callerMethodName, int callerLineNumber)
     {
         _callerFilePath = callerFilePath;
         _callerMethodName = callerMethodName;
@@ -14,7 +14,6 @@ internal readonly struct CallerInfo
     }
 
     public override string ToString() =>
-        $"CallerFilePath:   {_callerFilePath}\n" +
-        $"CallerMethodName: {_callerMethodName}\n" +
-        $"CallerLineNumber: {_callerLineNumber}";
+        $"[File]:         {_callerFilePath}\n" +
+        $"[Method, Line]: {_callerMethodName}, {_callerLineNumber}\n";
 }
