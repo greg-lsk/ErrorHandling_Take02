@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using ErrorHandling.Core.ErrorReporting;
+using System.Runtime.CompilerServices;
 
 
 namespace ErrorHandling.Core.Evaluation;
@@ -16,15 +17,11 @@ internal enum AttachingBehaviour
 
 public readonly ref struct Evaluation
 {
-    private readonly string _callerFilePath;
-    private readonly string _callerMemberName;
-    private readonly int _callerLineNumber;
+    private readonly EvaluationReport _report;
 
-    public Evaluation(string callerFilePath, string callerMemberName, int callerLineNumber)
+    internal Evaluation(string callerFilePath, string callerMemberName, int callerLineNumber)
     {
-        _callerFilePath = callerFilePath;
-        _callerMemberName = callerMemberName;
-        _callerLineNumber = callerLineNumber;
+        _report = new(callerFilePath, callerMemberName, callerLineNumber);
     }
 
     public static Evaluation Init(
@@ -37,5 +34,7 @@ public readonly ref struct Evaluation
 
     public Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject,
                                                   [CallerLineNumber] int callerLineNumber = 0)
-        => new(subject, _callerFilePath, _callerMemberName, _callerLineNumber, callerLineNumber);
+    {
+        return new(subject, _report, callerLineNumber);
+    }
 }

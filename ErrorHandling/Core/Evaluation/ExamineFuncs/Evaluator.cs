@@ -12,17 +12,16 @@ public partial class Evaluator<TSubject>
         if (_operationSeized)
             return this;
 
-        if (_attachingBehaviour == AttachingBehaviour.OnErrorStop && _incomplianceOccured)
+        if (_attachingBehaviour == AttachingBehaviour.OnErrorStop && _report.HasErrors)
             return this;
 
-        _incomplianceOccured = incompliance.AppliesTo(_subject!, param);
-        if (!_incomplianceOccured)
+        if (!incompliance.AppliesTo(_subject!, param))
             return this;
 
         if (incompliance.Severity == IncomplianceSeverity.Fatal)
             _operationSeized = true;
 
-        Report.Add(new FlagReport(incompliance.Flag, incompliance.Severity), _addAt);
+        _report.Add(ref _reportIndex, incompliance.Flag, incompliance.Severity);
 
         return this;
     }

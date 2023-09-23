@@ -10,24 +10,23 @@ public partial class Evaluator<TSubject>
 {
     private TSubject? _subject;
 
-    private int _addAt;
+    private ReportIndex _reportIndex;
     private readonly EvaluationReport _report;
-    private ref readonly EvaluationReport Report => ref _report;
     
     private bool _operationSeized;
-    private bool _incomplianceOccured;
     private AttachingBehaviour _attachingBehaviour;
 
 
-    private Evaluator(TSubject? subject,
+    internal Evaluator(TSubject? subject,
                       EvaluationReport report,
                       int callerLineNumber)
     {
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
-        _report = report;
 
-        var evReport = new EvaluatorReport(callerLineNumber);
-        _report.Add(evReport, out _addAt);
+        _report = report;
+        _reportIndex = new();
+
+        _report.Add(ref _reportIndex, callerLineNumber);
 
         if (subject is null)
         {
@@ -37,33 +36,13 @@ public partial class Evaluator<TSubject>
 
         _subject = subject;
     }
-    internal Evaluator(TSubject? subject,
-                       string callerFilePath,
-                       string callerMemberName,
-                       int callerLineNumber,
-                       int callerLineNumber02)
-    {
-        _attachingBehaviour = AttachingBehaviour.OnErrorStop;
-        _report = new(callerFilePath, callerMemberName, callerLineNumber);
-
-        var report = new EvaluatorReport(callerLineNumber02);
-        _report.Add(report, out _addAt);
-
-        if (subject is null)
-        {
-            NullAssignmentAction();
-            return;
-        }
-
-        _subject = subject;    
-    }
 
 
     public Evaluator<TSubject> Evaluate(TSubject? subject,
                                         [CallerLineNumber] int callerLineNumber = 0)
     {
-        var report = new EvaluatorReport(callerLineNumber);
-        _report.Add(report, out _addAt);
+        ResetState();
+        _report.Add(ref _reportIndex, callerLineNumber);
 
         if (subject is null)
         {
@@ -72,7 +51,6 @@ public partial class Evaluator<TSubject>
         }
 
         _subject = subject;
-        ResetState();
         return this;
     }
     public Evaluator<TNewSubject> Evaluate<TNewSubject>(TNewSubject? subject,
@@ -86,17 +64,16 @@ public partial class Evaluator<TSubject>
         if (_operationSeized)
             return this;
 
-        if (_attachingBehaviour == AttachingBehaviour.OnErrorStop && _incomplianceOccured)
+        if (_attachingBehaviour == AttachingBehaviour.OnErrorStop && _report.HasErrors)
             return this;
 
-        _incomplianceOccured = incompliance.AppliesTo(_subject!);
-        if (!_incomplianceOccured)
+        if (!incompliance.AppliesTo(_subject!))
             return this;
 
         if (incompliance.Severity == IncomplianceSeverity.Fatal)
             _operationSeized = true;
 
-        _report.Add(new FlagReport(incompliance.Flag, incompliance.Severity), _addAt);
+        _report.Add(ref _reportIndex, incompliance.Flag, incompliance.Severity);
 
         return this;
     }
@@ -115,19 +92,21 @@ public partial class Evaluator<TSubject>
 
     public Result<TEntity> YieldResult<TEntity>(TEntity entity)
     {
-        return new(entity, Report);
+        return new(entity, _report);
     }
 
     internal void NullAssignmentAction()
     {      
         _operationSeized = true;
-        _report.Add(new FlagReport(UniversalFlags.NullDetected, IncomplianceSeverity.Fatal), _addAt);
+        _report.Add(ref _reportIndex, UniversalFlags.NullDetected, IncomplianceSeverity.Fatal);
     }
 
     private void ResetState()
     {
         _operationSeized = false;
-        _incomplianceOccured = false;
+
+        _reportIndex.evaluatorIndex = 0;
+
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
     }
 }

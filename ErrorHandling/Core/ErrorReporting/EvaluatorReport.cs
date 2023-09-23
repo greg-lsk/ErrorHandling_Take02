@@ -5,9 +5,10 @@ internal class EvaluatorReport : IReport
     private readonly int _callerLineNumber;
     private List<IReport>? _report;
 
+    internal int Count => _report is not null ? _report.Count : 0;
 
     internal EvaluatorReport(int callerLineNumber) => _callerLineNumber = callerLineNumber;
-
+    
 
     internal void Add(IReport report)
     {
