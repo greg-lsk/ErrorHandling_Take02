@@ -15,13 +15,13 @@ internal enum AttachingBehaviour
     OnErrorStop
 }
 
-public readonly ref struct Evaluation
+public readonly struct Evaluation
 {
-    private readonly EvaluationReport _report;
+    private readonly ReportCollection _reports;
 
     internal Evaluation(string callerFilePath, string callerMemberName, int callerLineNumber)
     {
-        _report = new(callerFilePath, callerMemberName, callerLineNumber);
+        _reports = new(0, callerFilePath, callerMemberName, callerLineNumber);
     }
 
     public static Evaluation Init(
@@ -35,6 +35,6 @@ public readonly ref struct Evaluation
     public Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject,
                                                   [CallerLineNumber] int callerLineNumber = 0)
     {
-        return new(subject, _report, callerLineNumber);
+        return new(subject, _reports, callerLineNumber);
     }
 }

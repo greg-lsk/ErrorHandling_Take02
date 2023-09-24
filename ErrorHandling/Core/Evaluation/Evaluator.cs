@@ -11,14 +11,14 @@ public partial class Evaluator<TSubject>
     private TSubject? _subject;
 
     private ReportIndex _reportIndex;
-    private readonly EvaluationReport _report;
+    private readonly ReportCollection _report;
     
     private bool _operationSeized;
     private AttachingBehaviour _attachingBehaviour;
 
 
     internal Evaluator(TSubject? subject,
-                      EvaluationReport report,
+                      ReportCollection report,
                       int callerLineNumber)
     {
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
@@ -26,7 +26,7 @@ public partial class Evaluator<TSubject>
         _report = report;
         _reportIndex = new();
 
-        _report.Add(ref _reportIndex, callerLineNumber);
+        _report.Insert(ref _reportIndex, callerLineNumber);
 
         if (subject is null)
         {
@@ -42,7 +42,7 @@ public partial class Evaluator<TSubject>
                                         [CallerLineNumber] int callerLineNumber = 0)
     {
         ResetState();
-        _report.Add(ref _reportIndex, callerLineNumber);
+        _report.Insert(ref _reportIndex, callerLineNumber);
 
         if (subject is null)
         {
@@ -73,7 +73,7 @@ public partial class Evaluator<TSubject>
         if (incompliance.Severity == IncomplianceSeverity.Fatal)
             _operationSeized = true;
 
-        _report.Add(ref _reportIndex, incompliance.Flag, incompliance.Severity);
+        _report.Insert(ref _reportIndex, incompliance.Flag, incompliance.Severity);
 
         return this;
     }
@@ -90,22 +90,23 @@ public partial class Evaluator<TSubject>
         return this;
     }
 
-    public Result<TEntity> YieldResult<TEntity>(TEntity entity)
+    public void YieldResult<TEntity>(TEntity entity)
     {
-        return new(entity, _report);
+        _report.Print();
     }
 
     internal void NullAssignmentAction()
     {      
         _operationSeized = true;
-        _report.Add(ref _reportIndex, UniversalFlags.NullDetected, IncomplianceSeverity.Fatal);
+        _report.Insert(ref _reportIndex, UniversalFlags.NullDetected, IncomplianceSeverity.Fatal);
     }
 
     private void ResetState()
     {
         _operationSeized = false;
 
-        _reportIndex.evaluatorIndex = 0;
+        _reportIndex.evaluatorIndex = -1;
+        _reportIndex.flagIndex = -1;
 
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
     }

@@ -21,7 +21,7 @@ public partial class Evaluator<TSubject>
         if (incompliance.Severity == IncomplianceSeverity.Fatal)
             _operationSeized = true;
 
-        _report.Add(ref _reportIndex, incompliance.Flag, incompliance.Severity);
+        _report.Insert(ref _reportIndex, incompliance.Flag, incompliance.Severity);
 
         return this;
     }

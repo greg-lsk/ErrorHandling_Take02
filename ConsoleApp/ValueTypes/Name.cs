@@ -16,7 +16,6 @@ public struct Name
                 .Examine(in Incompliance.NameIsEmpty)
                 .Examine(in Incompliance.NameStartsWithLowerCase)
                 .Examine(in Incompliance.NameExceedsLength, MaxLength)
-        .YieldResult(stringValue)
-        .ToString();
+        .YieldResult(stringValue);
     }
 }
