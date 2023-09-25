@@ -6,14 +6,14 @@ namespace ErrorHandling.Evaluation;
 
 public partial class Evaluator<TSubject>
 {
-    private TSubject? _subject;
-
-    private ReportIndex _reportIndex;
     private readonly Evaluation _evaluation;
+
+    private TSubject? _subject;
     
     private bool _operationSeized;
     private AttachingBehaviour _attachingBehaviour;
 
+    private ReportIndex _reportIndex;
     private EvaluationReport Report => _evaluation.Report;
 
     private bool AbortExamination 
