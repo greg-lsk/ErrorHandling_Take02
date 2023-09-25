@@ -5,4 +5,4 @@
 
 Console.WriteLine(name.IsValid ? name.Value.StringValue : name.ErrorsCaptured());*/
 
-Name.Test("gregg");
+Name.Test("greeegg");

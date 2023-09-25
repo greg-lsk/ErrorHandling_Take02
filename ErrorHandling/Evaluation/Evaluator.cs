@@ -9,26 +9,28 @@ public partial class Evaluator<TSubject>
     private TSubject? _subject;
 
     private ReportIndex _reportIndex;
-    private readonly EvaluationReport _report;
+    private readonly Evaluation _evaluation;
     
     private bool _operationSeized;
     private AttachingBehaviour _attachingBehaviour;
 
+    private EvaluationReport Report => _evaluation.Report;
+
     private bool AbortExamination 
         => _attachingBehaviour == AttachingBehaviour.OnErrorStop 
-        && _report.HasErrors;
+        && Report.HasErrors;
 
 
     internal Evaluator(TSubject? subject,
                        int callerLineNumber,
-                       EvaluationReport report)
+                       Evaluation evaluation)
     {
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
 
-        _report = report;
+        _evaluation = evaluation;
         _reportIndex = new();
 
-        _report.Insert(ref _reportIndex, callerLineNumber);
+        Report.Insert(ref _reportIndex, callerLineNumber);
 
         if (subject is null)
         {
@@ -44,7 +46,7 @@ public partial class Evaluator<TSubject>
                                         [CallerLineNumber] int callerLineNumber = 0)
     {
         ResetState();
-        _report.Insert(ref _reportIndex, callerLineNumber);
+        Report.Insert(ref _reportIndex, callerLineNumber);
 
         if (subject is null)
         {
@@ -58,7 +60,7 @@ public partial class Evaluator<TSubject>
     public Evaluator<TNewSubject> Evaluate<TNewSubject>(TNewSubject? subject,
                                                         [CallerLineNumber] int callerLineNumber = 0)
     {
-        return new(subject, callerLineNumber, _report);
+        return new(subject, callerLineNumber, _evaluation);
     }
 
     public Evaluator<TSubject> Examine(in IncomplianceRecord<TSubject> incompliance)
@@ -72,7 +74,7 @@ public partial class Evaluator<TSubject>
         if (incompliance.Severity == IncomplianceSeverity.Fatal) 
             _operationSeized = true;
 
-        _report.Insert(ref _reportIndex, incompliance.Flag, incompliance.Severity);
+        Report.Insert(ref _reportIndex, incompliance.Flag, incompliance.Severity);
 
         return this;
     }
@@ -89,21 +91,17 @@ public partial class Evaluator<TSubject>
         return this;
     }
 
-    public void YieldResult<TEntity>(TEntity entity)
-    {
-        _report.Print();
-    }
-
+    public ref readonly Evaluation Snooze() => ref _evaluation;
 
     private void NullDetected()
     {      
         _operationSeized = true;
-        _report.Insert(ref _reportIndex, UniversalFlags.NullDetected, IncomplianceSeverity.Fatal);
+        Report.Insert(ref _reportIndex, UniversalFlags.NullDetected, IncomplianceSeverity.Fatal);
     }
     private void ResetState()
     { 
         _operationSeized = false;
-        _reportIndex.evaluationIndex = -1;
+        _reportIndex.evaluationIndex = 0;
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
     }
 }

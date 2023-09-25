@@ -8,8 +8,8 @@ internal struct ReportIndex
 
     public ReportIndex()
     {
-        reportIndex = -1;
-        evaluationIndex = -1;
+        reportIndex = 0;
+        evaluationIndex = 0;
     }
 
     internal ReportIndex(int collectionIndex, int evaluatorIndex)

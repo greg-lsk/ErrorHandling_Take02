@@ -9,12 +9,17 @@ public struct Name
 
     public static void Test(string stringValue)
     {
-        Evaluation.Init()
-            .Evaluate(stringValue)
-            .CaptureAll()
-                .Examine(in Incompliance.NameIsEmpty)
-                .Examine(in Incompliance.NameStartsWithLowerCase)
-                .Examine(in Incompliance.NameExceedsLength, MaxLength)
-        .YieldResult(stringValue);
+        var evaluation = Evaluation.Init();
+
+        evaluation.Evaluate(stringValue)
+                  .CaptureAll()
+                    .Examine(in Incompliance.NameIsEmpty)
+                    .Examine(in Incompliance.NameStartsWithLowerCase)
+                    .Examine(in Incompliance.NameExceedsLength, MaxLength)
+                  .Snooze();
+
+        //Do other stuff here
+
+        evaluation.Print();
     }
 }

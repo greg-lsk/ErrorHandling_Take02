@@ -6,11 +6,11 @@ namespace ErrorHandling.Evaluation;
 
 public readonly struct Evaluation
 {
-    private readonly EvaluationReport _reports;
+    internal readonly EvaluationReport Report;
 
     internal Evaluation(string callerFilePath, string callerMemberName, int callerLineNumber)
     {
-        _reports = new(callerFilePath, callerMemberName, callerLineNumber);
+        Report = new(callerFilePath, callerMemberName, callerLineNumber);
     }
 
     public static Evaluation Init(
@@ -24,6 +24,8 @@ public readonly struct Evaluation
     public Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject,
                                                   [CallerLineNumber] int callerLineNumber = 0)
     {
-        return new(subject, callerLineNumber, _reports);
+        return new(subject, callerLineNumber, this);
     }
+
+    public void Print() => Report.Print();
 }
