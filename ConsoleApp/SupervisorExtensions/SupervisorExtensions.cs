@@ -1,7 +1,4 @@
-﻿using ErrorHandling.Core;
-
-
-namespace ConsoleApp.SupervisorExtensions;
+﻿namespace ConsoleApp.SupervisorExtensions;
 
 public static class SupervisorExtensions
 {

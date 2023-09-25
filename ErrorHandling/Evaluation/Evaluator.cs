@@ -1,24 +1,21 @@
 ﻿using System.Runtime.CompilerServices;
+using ErrorHandling.Reporting;
 
-using ErrorHandling.Public;
-using ErrorHandling.Core.ErrorReporting;
-
-
-namespace ErrorHandling.Core.Evaluation;
+namespace ErrorHandling.Evaluation;
 
 public partial class Evaluator<TSubject>
 {
     private TSubject? _subject;
 
     private ReportIndex _reportIndex;
-    private readonly ReportCollection _report;
+    private readonly EvaluationReport _report;
     
     private bool _operationSeized;
     private AttachingBehaviour _attachingBehaviour;
 
 
     internal Evaluator(TSubject? subject,
-                      ReportCollection report,
+                      EvaluationReport report,
                       int callerLineNumber)
     {
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
@@ -102,12 +99,9 @@ public partial class Evaluator<TSubject>
     }
 
     private void ResetState()
-    {
+    { 
         _operationSeized = false;
-
         _reportIndex.evaluatorIndex = -1;
-        _reportIndex.flagIndex = -1;
-
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
     }
 }

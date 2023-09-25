@@ -1,15 +1,14 @@
-﻿using ErrorHandling.Core.ErrorReporting;
+﻿using ErrorHandling.Reporting.CallStackInfo;
 
-
-namespace ErrorHandling.Core;
+namespace ErrorHandling;
 
 public class Result<T>
 {
     public T? Value { get; private set; }
 
-    private readonly EvaluationReport Report;
+    private readonly EvaluationInfo Report;
 
-    internal Result(T value, EvaluationReport report) 
+    internal Result(T value, EvaluationInfo report)
     {
         Value = value;
         Report = report;

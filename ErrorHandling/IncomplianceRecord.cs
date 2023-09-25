@@ -1,4 +1,4 @@
-﻿namespace ErrorHandling.Public;
+﻿namespace ErrorHandling;
 
 
 public readonly struct IncomplianceRecord<TSubject>
@@ -27,8 +27,8 @@ public readonly struct IncomplianceRecord<TSubject, T1>
     public readonly IncomplianceSeverity Severity;
 
     public IncomplianceRecord(
-        Func<TSubject, T1, bool> incomplianceDelegate, 
-        Enum flag, 
+        Func<TSubject, T1, bool> incomplianceDelegate,
+        Enum flag,
         IncomplianceSeverity severity)
     {
         Delegate = incomplianceDelegate;
@@ -46,7 +46,7 @@ public readonly struct IncomplianceRecord<TSubject, T1, T2>
     public readonly IncomplianceSeverity Severity;
 
     public IncomplianceRecord(
-        Func<TSubject, T1, T2, bool> incomplianceDelegate, 
+        Func<TSubject, T1, T2, bool> incomplianceDelegate,
         Enum flag,
         IncomplianceSeverity severity)
     {
@@ -55,7 +55,7 @@ public readonly struct IncomplianceRecord<TSubject, T1, T2>
         Severity = severity;
     }
 
-    public bool AppliesTo(TSubject subject, T1 param1, T2 param2) 
+    public bool AppliesTo(TSubject subject, T1 param1, T2 param2)
         => Delegate.Invoke(subject, param1, param2);
 }
 

@@ -1,4 +1,4 @@
-﻿namespace ErrorHandling.Public;
+﻿namespace ErrorHandling;
 
 public partial class IncomplianceDelegate
 {

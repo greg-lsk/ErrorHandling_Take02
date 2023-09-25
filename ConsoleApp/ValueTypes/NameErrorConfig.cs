@@ -1,4 +1,4 @@
-﻿using ErrorHandling.Public;
+﻿using ErrorHandling;
 
 namespace ConsoleApp.ValueTypes;
 

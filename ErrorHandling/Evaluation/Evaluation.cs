@@ -1,27 +1,15 @@
-﻿using ErrorHandling.Core.ErrorReporting;
+﻿using ErrorHandling.Reporting;
 using System.Runtime.CompilerServices;
 
 
-namespace ErrorHandling.Core.Evaluation;
-
-internal enum UniversalFlags
-{
-    NullDetected
-}
-
-internal enum AttachingBehaviour
-{
-    Accumulative,
-    OnErrorStop
-}
-
+namespace ErrorHandling.Evaluation;
 public readonly struct Evaluation
 {
-    private readonly ReportCollection _reports;
+    private readonly EvaluationReport _reports;
 
     internal Evaluation(string callerFilePath, string callerMemberName, int callerLineNumber)
     {
-        _reports = new(0, callerFilePath, callerMemberName, callerLineNumber);
+        _reports = new(callerFilePath, callerMemberName, callerLineNumber);
     }
 
     public static Evaluation Init(

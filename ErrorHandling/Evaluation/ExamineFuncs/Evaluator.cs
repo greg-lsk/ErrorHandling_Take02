@@ -1,7 +1,4 @@
-﻿using ErrorHandling.Core.ErrorReporting;
-using ErrorHandling.Public;
-
-namespace ErrorHandling.Core.Evaluation;
+﻿namespace ErrorHandling.Evaluation;
 
 public partial class Evaluator<TSubject>
 {
