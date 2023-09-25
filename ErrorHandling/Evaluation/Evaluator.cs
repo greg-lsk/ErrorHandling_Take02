@@ -20,8 +20,8 @@ public partial class Evaluator<TSubject>
 
 
     internal Evaluator(TSubject? subject,
-                      EvaluationReport report,
-                      int callerLineNumber)
+                       int callerLineNumber,
+                       EvaluationReport report)
     {
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
 
@@ -58,7 +58,7 @@ public partial class Evaluator<TSubject>
     public Evaluator<TNewSubject> Evaluate<TNewSubject>(TNewSubject? subject,
                                                         [CallerLineNumber] int callerLineNumber = 0)
     {
-        return new(subject, _report, callerLineNumber);
+        return new(subject, callerLineNumber, _report);
     }
 
     public Evaluator<TSubject> Examine(in IncomplianceRecord<TSubject> incompliance)

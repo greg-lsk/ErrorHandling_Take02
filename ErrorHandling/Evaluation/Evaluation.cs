@@ -14,7 +14,7 @@ public readonly struct Evaluation
     }
 
     public static Evaluation Init(
-        [CallerFilePath] string callerFilePath = null!,
+        [CallerFilePath]   string callerFilePath = null!,
         [CallerMemberName] string callerMemberName = null!,
         [CallerLineNumber] int callerLineNumber = 0)
     {
@@ -24,6 +24,6 @@ public readonly struct Evaluation
     public Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject,
                                                   [CallerLineNumber] int callerLineNumber = 0)
     {
-        return new(subject, _reports, callerLineNumber);
+        return new(subject, callerLineNumber, _reports);
     }
 }
