@@ -10,7 +10,7 @@ internal class EvaluationReport
     private readonly EvaluationInfo _evaluationInfo;
 
     private readonly List<EvaluatorInfo> _evaluations;
-    private readonly List<int> _printIndexer;
+    private readonly List<int> _flagLinks;
     private List<FlagCollection>? _flags;
 
     internal bool HasErrors;
@@ -20,23 +20,24 @@ internal class EvaluationReport
                               string callerMethodName,
                               int callerLineNumber)
     {
-        _printIndexer = new() { };
         _evaluationInfo = new(callerFilePath, callerMethodName, callerLineNumber);
+
+        _flagLinks = new() { };
         _evaluations = new();
     }
 
 
     internal void Insert(ref ReportIndex index, int callerLineNumber)
     {
-        _printIndexer.Add(-1);
+        _flagLinks.Add(-1);
         _evaluations.Add(new(callerLineNumber));
 
-        index.evaluatorIndex = _evaluations.Count - 1;
+        index.evaluationIndex = _evaluations.Count - 1;
     }
 
     internal void Insert(ref ReportIndex index, Enum flag, IncomplianceSeverity severity)
     {
-        _printIndexer[index.evaluatorIndex] = index.evaluatorIndex;
+        _flagLinks[index.evaluationIndex] = index.evaluationIndex;
         UpdateErrorStatus(severity);
 
         if (_flags is null)
@@ -46,9 +47,9 @@ internal class EvaluationReport
         }
 
         //CopingOfStructRequired: 2             
-        var flags = _flags[index.evaluatorIndex];
+        var flags = _flags[index.evaluationIndex];
         flags.Add(flag, severity);
-        _flags[index.evaluatorIndex] = flags;
+        _flags[index.evaluationIndex] = flags;
         //CopingOfStructRequired: 2
     }
 
@@ -59,12 +60,12 @@ internal class EvaluationReport
         var stringBuilder = new StringBuilder();
         stringBuilder.Append(_evaluationInfo.ToString());
 
-        for (int i = 0; i < _printIndexer.Count; ++i)
+        for (int i = 0; i < _flagLinks.Count; ++i)
         {
-            if (_printIndexer[i] != -1)
+            if (_flagLinks[i] != -1)
                 stringBuilder.Append("  ")
                              .Append(_evaluations[i].ToString())
-                             .Append(_flags![_printIndexer[i]].ToString());
+                             .Append(_flags![_flagLinks[i]].ToString());
         }
 
         Console.WriteLine(stringBuilder.ToString());

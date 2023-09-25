@@ -2,19 +2,19 @@
 
 internal struct ReportIndex
 {
-    internal int collectionIndex;
-    internal int evaluatorIndex;
+    internal int reportIndex;
+    internal int evaluationIndex;
 
 
     public ReportIndex()
     {
-        collectionIndex = -1;
-        evaluatorIndex = -1;
+        reportIndex = -1;
+        evaluationIndex = -1;
     }
 
     internal ReportIndex(int collectionIndex, int evaluatorIndex)
     {
-        this.collectionIndex = collectionIndex;
-        this.evaluatorIndex = evaluatorIndex;
+        this.reportIndex = collectionIndex;
+        this.evaluationIndex = evaluatorIndex;
     }
 }

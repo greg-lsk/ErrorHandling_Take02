@@ -103,7 +103,7 @@ public partial class Evaluator<TSubject>
     private void ResetState()
     { 
         _operationSeized = false;
-        _reportIndex.evaluatorIndex = -1;
+        _reportIndex.evaluationIndex = -1;
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
     }
 }
