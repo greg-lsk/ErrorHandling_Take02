@@ -1,15 +1,16 @@
 ﻿using System.Text;
-using ErrorHandling.Reporting.CallStackInfo;
 using ErrorHandling.Reporting.Collections;
+using ErrorHandling.Reporting.CallStackInfo;
+
 
 namespace ErrorHandling.Reporting;
+
 internal class EvaluationReport
 {
     private readonly EvaluationInfo _evaluationInfo;
 
-    private readonly List<int> _printIndexer;
     private readonly List<EvaluatorInfo> _evaluations;
-
+    private readonly List<int> _printIndexer;
     private List<FlagCollection>? _flags;
 
     internal bool HasErrors;
@@ -27,10 +28,10 @@ internal class EvaluationReport
 
     internal void Insert(ref ReportIndex index, int callerLineNumber)
     {
-        _evaluations.Add(new(callerLineNumber));
-        index.evaluatorIndex = _evaluations.Count - 1;
-
         _printIndexer.Add(-1);
+        _evaluations.Add(new(callerLineNumber));
+
+        index.evaluatorIndex = _evaluations.Count - 1;
     }
 
     internal void Insert(ref ReportIndex index, Enum flag, IncomplianceSeverity severity)

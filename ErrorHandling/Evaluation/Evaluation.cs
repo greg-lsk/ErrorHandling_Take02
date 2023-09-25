@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 
 
 namespace ErrorHandling.Evaluation;
+
 public readonly struct Evaluation
 {
     private readonly EvaluationReport _reports;

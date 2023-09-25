@@ -1,5 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using ErrorHandling.Reporting;
+﻿using ErrorHandling.Reporting;
+using System.Runtime.CompilerServices;
+
 
 namespace ErrorHandling.Evaluation;
 
@@ -12,6 +13,10 @@ public partial class Evaluator<TSubject>
     
     private bool _operationSeized;
     private AttachingBehaviour _attachingBehaviour;
+
+    private bool AbortExamination 
+        => _attachingBehaviour == AttachingBehaviour.OnErrorStop 
+        && _report.HasErrors;
 
 
     internal Evaluator(TSubject? subject,
@@ -58,16 +63,13 @@ public partial class Evaluator<TSubject>
 
     public Evaluator<TSubject> Examine(in IncomplianceRecord<TSubject> incompliance)
     {
-        if (_operationSeized)
-            return this;
+        if (_operationSeized) return this;
 
-        if (_attachingBehaviour == AttachingBehaviour.OnErrorStop && _report.HasErrors)
-            return this;
+        if (AbortExamination) return this;
 
-        if (!incompliance.AppliesTo(_subject!))
-            return this;
+        if (!incompliance.AppliesTo(_subject!)) return this;
 
-        if (incompliance.Severity == IncomplianceSeverity.Fatal)
+        if (incompliance.Severity == IncomplianceSeverity.Fatal) 
             _operationSeized = true;
 
         _report.Insert(ref _reportIndex, incompliance.Flag, incompliance.Severity);

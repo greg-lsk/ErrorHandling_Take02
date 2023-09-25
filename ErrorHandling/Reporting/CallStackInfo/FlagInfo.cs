@@ -1,7 +1,4 @@
-﻿using System.Text;
-
-
-namespace ErrorHandling.Reporting.CallStackInfo;
+﻿namespace ErrorHandling.Reporting.CallStackInfo;
 
 internal readonly struct FlagInfo
 {

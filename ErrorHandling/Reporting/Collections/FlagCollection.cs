@@ -1,7 +1,9 @@
 ﻿using System.Text;
 using ErrorHandling.Reporting.CallStackInfo;
 
+
 namespace ErrorHandling.Reporting.Collections;
+
 internal struct FlagCollection
 {
     private readonly FlagInfo _report;
@@ -14,6 +16,7 @@ internal struct FlagCollection
     {
         _report = new(flag, severity);
     }
+
 
     internal void Add(Enum flag, IncomplianceSeverity severity)
     {
@@ -30,9 +33,8 @@ internal struct FlagCollection
     {
         StringBuilder stringBuilder = new();
 
-        stringBuilder
-            .Append(_report.ToString())
-            .Append('\n');
+        stringBuilder.Append(_report.ToString())
+                     .Append('\n');
 
         if (_reportList is null)
             return stringBuilder.ToString();
