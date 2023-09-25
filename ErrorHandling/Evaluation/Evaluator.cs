@@ -32,7 +32,7 @@ public partial class Evaluator<TSubject>
 
         if (subject is null)
         {
-            NullAssignmentAction();
+            NullDetected();
             return;
         }
 
@@ -48,7 +48,7 @@ public partial class Evaluator<TSubject>
 
         if (subject is null)
         {
-            NullAssignmentAction();
+            NullDetected();
             return this;
         }
 
@@ -94,12 +94,12 @@ public partial class Evaluator<TSubject>
         _report.Print();
     }
 
-    internal void NullAssignmentAction()
+
+    private void NullDetected()
     {      
         _operationSeized = true;
         _report.Insert(ref _reportIndex, UniversalFlags.NullDetected, IncomplianceSeverity.Fatal);
     }
-
     private void ResetState()
     { 
         _operationSeized = false;
