@@ -1,4 +1,5 @@
-﻿using ErrorHandling.Evaluation;
+﻿using ErrorHandling;
+using ErrorHandling.Evaluating;
 
 namespace ConsoleApp.ValueTypes;
 
@@ -7,19 +8,16 @@ public struct Name
     public const int MaxLength = 4;
     public string StringValue { get; set; }
 
-    public static void Test(string stringValue)
+    public static Result<Name> Create(string stringValue)
     {
         var evaluation = Evaluation.Init();
 
-        evaluation.Evaluate(stringValue)
-                  .CaptureAll()
-                    .Examine(in Incompliance.NameIsEmpty)
-                    .Examine(in Incompliance.NameStartsWithLowerCase)
-                    .Examine(in Incompliance.NameExceedsLength, MaxLength)
-                  .Snooze();
-
-        //Do other stuff here
-
-        evaluation.Print();
+        return evaluation
+            .Evaluate(stringValue)
+            .CaptureAll()
+                .Examine(in Incompliance.NameIsEmpty)
+                .Examine(in Incompliance.NameStartsWithLowerCase)
+                .Examine(in Incompliance.NameExceedsLength, MaxLength)
+            .YieldResult<Name>(() => new() { StringValue = stringValue });
     }
 }

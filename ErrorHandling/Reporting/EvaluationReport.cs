@@ -8,12 +8,12 @@ namespace ErrorHandling.Reporting;
 internal class EvaluationReport
 {
     private readonly EvaluationInfo _evaluationInfo;
-
     private readonly List<EvaluatorInfo> _evaluations;
+
     private readonly List<int> _flagLinks;
     private List<FlagCollection>? _flags;
 
-    internal bool HasErrors;
+    internal bool HasErrors => _flags is not null;
 
 
     internal EvaluationReport(string callerFilePath,
@@ -21,39 +21,49 @@ internal class EvaluationReport
                               int callerLineNumber)
     {
         _evaluationInfo = new(callerFilePath, callerMethodName, callerLineNumber);
-
         _flagLinks = new() { };
         _evaluations = new();
     }
 
 
-    internal void Insert(ref ReportIndex index, int callerLineNumber)
+    internal void LogEvaluation(ref ReportIndex index, int lineNumber)
     {
         _flagLinks.Add(-1);
-        _evaluations.Add(new(callerLineNumber));
 
-        index.evaluationIndex = _evaluations.Count - 1;
+        _evaluations.Add(new(lineNumber));
+
+        ReportSynchronizer.UpdateEvaluationLink(ref index, _evaluations);
     }
 
-    internal void Insert(ref ReportIndex index, Enum flag, IncomplianceSeverity severity)
+    internal void LogIncompliance(ref ReportIndex index, Enum flag, IncomplianceSeverity severity)
     {
-        _flagLinks[index.evaluationIndex] = index.evaluationIndex;
-        UpdateErrorStatus(severity);
-
+        _flagLinks[index.evaluationLink] = index.evaluationLink;
+        
         if (_flags is null)
         {
             _flags = new() { new(flag, severity) };
             return;
         }
 
-        //CopingOfStructRequired: 2             
-        var flags = _flags[index.evaluationIndex];
-        flags.Add(flag, severity);
-        _flags[index.evaluationIndex] = flags;
-        //CopingOfStructRequired: 2
+        if (index.evaluationLink < _flags.Count)
+        {
+            var flags = _flags[index.evaluationLink];
+            flags.Add(flag, severity);
+            _flags[index.evaluationLink] = flags;
+            return;
+        }
+
+        _flags.Add( new(flag, severity) );
     }
 
-    //private int Trasform(int index) => index != 0 ? -index - 2 : 0;
+    internal void LogExternal(ref ReportIndex index, int lineNumber, int collectionIndex)
+    {
+        _flagLinks.Add(ReportSynchronizer.Transform(collectionIndex));
+
+        _evaluations.Add(new(lineNumber));
+
+        ReportSynchronizer.UpdateEvaluationLink(ref index, _evaluations);
+    }
 
     internal void Print()
     {
@@ -69,17 +79,5 @@ internal class EvaluationReport
         }
 
         Console.WriteLine(stringBuilder.ToString());
-    }
-
-
-    private void UpdateErrorStatus(IncomplianceSeverity severity)
-    {
-        switch (severity)
-        {
-            case IncomplianceSeverity.Error:
-            case IncomplianceSeverity.Fatal:
-                HasErrors = true;
-                break;
-        }
     }
 }

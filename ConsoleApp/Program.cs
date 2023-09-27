@@ -1,8 +1,10 @@
-﻿using ConsoleApp.ValueTypes;
+﻿using ConsoleApp.Entities;
+using ConsoleApp.ValueTypes;
+using ErrorHandling.Evaluating;
 
 
-/*var name = Name.Create("Gregg");
+var evaluation = Evaluation.Init();
 
-Console.WriteLine(name.IsValid ? name.Value.StringValue : name.ErrorsCaptured());*/
-
-Name.Test("greeegg");
+evaluation.Evaluate(Person.Create(Name.Create("gregg"),
+                                  Name.Create("Allman")))
+          .Print();

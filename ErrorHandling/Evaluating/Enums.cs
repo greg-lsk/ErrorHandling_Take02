@@ -1,4 +1,4 @@
-﻿namespace ErrorHandling.Evaluation;
+﻿namespace ErrorHandling.Evaluating;
 
 internal enum UniversalFlags
 {

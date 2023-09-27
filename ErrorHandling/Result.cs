@@ -1,4 +1,5 @@
-﻿using ErrorHandling.Reporting.CallStackInfo;
+﻿using ErrorHandling.Reporting.Collections;
+
 
 namespace ErrorHandling;
 
@@ -6,13 +7,20 @@ public class Result<T>
 {
     public T? Value { get; private set; }
 
-    private readonly EvaluationInfo Report;
+    internal readonly ReportCollection Reports;
 
-    internal Result(T value, EvaluationInfo report)
+
+    internal Result(T value, ReportCollection reports)
     {
-        Value = value;
-        Report = report;
+            Value = value;
+            Reports = reports;
     }
 
-    public override string ToString() => Report.ToString();
+    internal Result(ReportCollection reports)
+    {
+        Value = default;
+        Reports = reports;
+    }
+
+    public void Print() => Reports.Print();
 }

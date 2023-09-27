@@ -2,23 +2,23 @@
 using System.Runtime.CompilerServices;
 
 
-namespace ErrorHandling.Evaluation;
+namespace ErrorHandling.Evaluating;
 
 public partial class Evaluator<TSubject>
 {
+    private TSubject? _subject;
+    private ReportIndex _reportIndex;
     private readonly Evaluation _evaluation;
 
-    private TSubject? _subject;
-    
     private bool _operationSeized;
     private AttachingBehaviour _attachingBehaviour;
 
-    private ReportIndex _reportIndex;
-    private EvaluationReport Report => _evaluation.Report;
+    private EvaluationReport CurrentReport 
+        => _evaluation.Reports[_reportIndex.reportLink];
 
     private bool AbortExamination 
         => _attachingBehaviour == AttachingBehaviour.OnErrorStop 
-        && Report.HasErrors;
+        && CurrentReport.HasErrors;
 
 
     internal Evaluator(TSubject? subject,
@@ -30,7 +30,9 @@ public partial class Evaluator<TSubject>
         _evaluation = evaluation;
         _reportIndex = new();
 
-        Report.Insert(ref _reportIndex, callerLineNumber);
+        CurrentReport.LogEvaluation(
+            index:      ref _reportIndex,
+            lineNumber: callerLineNumber);
 
         if (subject is null)
         {
@@ -46,7 +48,10 @@ public partial class Evaluator<TSubject>
                                         [CallerLineNumber] int callerLineNumber = 0)
     {
         ResetState();
-        Report.Insert(ref _reportIndex, callerLineNumber);
+
+        CurrentReport.LogEvaluation(
+            index:      ref _reportIndex,
+            lineNumber: callerLineNumber);
 
         if (subject is null)
         {
@@ -57,10 +62,22 @@ public partial class Evaluator<TSubject>
         _subject = subject;
         return this;
     }
+
     public Evaluator<TNewSubject> Evaluate<TNewSubject>(TNewSubject? subject,
                                                         [CallerLineNumber] int callerLineNumber = 0)
     {
         return new(subject, callerLineNumber, _evaluation);
+    }
+
+    public Evaluation Evaluate(Result<TSubject> result,
+                               [CallerLineNumber] int callerLineNumber = 0)
+    {
+        CurrentReport.LogExternal(
+            index:           ref _reportIndex,
+            lineNumber:      callerLineNumber,
+            collectionIndex: ReportSynchronizer.MergeReports(_evaluation.Reports, result.Reports));
+
+        return _evaluation;
     }
 
     public Evaluator<TSubject> Examine(in IncomplianceRecord<TSubject> incompliance)
@@ -74,8 +91,11 @@ public partial class Evaluator<TSubject>
         if (incompliance.Severity == IncomplianceSeverity.Fatal) 
             _operationSeized = true;
 
-        Report.Insert(ref _reportIndex, incompliance.Flag, incompliance.Severity);
-
+        CurrentReport.LogIncompliance(
+            index:    ref _reportIndex,
+            flag:     incompliance.Flag,
+            severity: incompliance.Severity);
+        
         return this;
     }
 
@@ -93,15 +113,25 @@ public partial class Evaluator<TSubject>
 
     public ref readonly Evaluation Snooze() => ref _evaluation;
 
+    public Result<T> YieldResult<T>(Func<T> createDelegate)
+    {
+        return CurrentReport.HasErrors 
+            ? new Result<T>(_evaluation.Reports)
+            : new Result<T>(createDelegate.Invoke(), _evaluation.Reports);
+    }
+
     private void NullDetected()
     {      
         _operationSeized = true;
-        Report.Insert(ref _reportIndex, UniversalFlags.NullDetected, IncomplianceSeverity.Fatal);
+
+        CurrentReport.LogIncompliance(
+            index:    ref _reportIndex,
+            flag:     UniversalFlags.NullDetected,
+            severity: IncomplianceSeverity.Fatal);
     }
     private void ResetState()
     { 
         _operationSeized = false;
-        _reportIndex.evaluationIndex = 0;
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
     }
 }

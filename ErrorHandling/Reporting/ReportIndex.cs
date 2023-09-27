@@ -1,20 +1,18 @@
-﻿namespace ErrorHandling.Reporting;
+﻿using ErrorHandling.Reporting.CallStackInfo;
+using ErrorHandling.Reporting.Collections;
+
+
+namespace ErrorHandling.Reporting;
 
 internal struct ReportIndex
 {
-    internal int reportIndex;
-    internal int evaluationIndex;
+    internal int reportLink;
+    internal int evaluationLink;
 
 
     public ReportIndex()
     {
-        reportIndex = 0;
-        evaluationIndex = 0;
-    }
-
-    internal ReportIndex(int collectionIndex, int evaluatorIndex)
-    {
-        this.reportIndex = collectionIndex;
-        this.evaluationIndex = evaluatorIndex;
+        reportLink = 0;
+        evaluationLink = 0;
     }
 }

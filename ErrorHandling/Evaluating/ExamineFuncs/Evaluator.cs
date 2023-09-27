@@ -1,4 +1,4 @@
-﻿namespace ErrorHandling.Evaluation;
+﻿namespace ErrorHandling.Evaluating;
 
 public partial class Evaluator<TSubject>
 {
@@ -15,7 +15,7 @@ public partial class Evaluator<TSubject>
         if (incompliance.Severity == IncomplianceSeverity.Fatal)
             _operationSeized = true;
 
-        Report.Insert(ref _reportIndex, incompliance.Flag, incompliance.Severity);
+        CurrentReport.LogIncompliance(ref _reportIndex, incompliance.Flag, incompliance.Severity);
 
         return this;
     }
