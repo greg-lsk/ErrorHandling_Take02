@@ -5,12 +5,18 @@ namespace ErrorHandling.Reporting;
 
 internal class EvaluationReport
 {
+    internal Guid ReportId { get; init; }
+    internal List<Guid>? externalReports;
+
     private int _linksProvided;
     private List<FlagCollection>? _flags;
 
     internal int NextLink => _linksProvided++;
     internal bool HasErrors => _flags is not null;
-    
+
+
+    internal EvaluationReport() => ReportId = Guid.NewGuid();
+
 
     internal void LogIncompliance(ref int reportLink, Enum flag, IncomplianceSeverity severity)
     {
@@ -32,7 +38,7 @@ internal class EvaluationReport
         }
     }
 
-    internal void LogIncoming(EvaluationReport report)
+    internal void LogExternal(EvaluationReport report)
     {
         switch(_flags, report._flags)
         {
@@ -43,10 +49,12 @@ internal class EvaluationReport
             case (null, _):
                 _flags = new();
                 _flags = report._flags;
+                UpdateExternalReports(report);
                 break;
 
             case (_, _):
-                _flags.AddRange(report._flags); 
+                _flags.AddRange(report._flags);
+                UpdateExternalReports(report);
                 break;
         }
     }
@@ -70,5 +78,26 @@ internal class EvaluationReport
             1 => AddAction.NewFlagCollection,
             _ => AddAction.IndexedAdd 
         };
+    }
+    private void UpdateExternalReports(EvaluationReport report)
+    {
+        if(externalReports is not null)
+        {
+            externalReports.Add(report.ReportId);
+            return;
+        }
+
+        externalReports = new() { report.ReportId };
+    }
+
+    internal string StringRep()
+    {
+        var str = $"[ID]:           {ReportId}";
+        if (externalReports is not null)
+        {
+            foreach(var id in externalReports)
+                str = $"{str}\n  -[ExternalErrors]{id}";
+        }
+        return str;
     }
 }

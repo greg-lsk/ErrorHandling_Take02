@@ -34,13 +34,13 @@ public readonly struct Evaluation
     {
         if (!result.Report.HasErrors) return this;
        
-        Report.LogIncoming(result.Report);
+        Report.LogExternal(result.Report);
         return this;
     }
 
     public Result<T> YieldResult<T>(Func<T> createDelegate)
     {
-        if (Report.HasErrors) Console.WriteLine(TraceInfo);
+        if (Report.HasErrors) Console.WriteLine($"{Report.StringRep()}\n{TraceInfo}");
 
         return new Result<T>(createDelegate.Invoke(), Report);
     }

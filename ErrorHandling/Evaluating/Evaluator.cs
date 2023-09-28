@@ -15,9 +15,8 @@ public partial class Evaluator<TSubject>
     private EvaluationReport Report => _evaluation.Report;
 
     private bool ErrorsOccured => Report.EvaluationYieldedErrors(_reportLink);
-    private bool AbortExamination
-        => _attachingBehaviour == AttachingBehaviour.OnErrorStop
-        && ErrorsOccured;
+    private bool AbortExamination => _attachingBehaviour == AttachingBehaviour.OnErrorStop
+                                     && ErrorsOccured;
 
 
     internal Evaluator(TSubject? subject,
@@ -62,7 +61,7 @@ public partial class Evaluator<TSubject>
     {
         if (!result.Report.HasErrors) return ref _evaluation;
 
-        Report.LogIncoming(result.Report);
+        Report.LogExternal(result.Report);
 
         return ref _evaluation;
     }
@@ -104,7 +103,7 @@ public partial class Evaluator<TSubject>
 
     public Result<T> YieldResult<T>(Func<T> createDelegate)
     {
-        if (ErrorsOccured) Console.WriteLine(_evaluation.TraceInfo);
+        if (ErrorsOccured) Console.WriteLine($"{Report.StringRep()}\n{_evaluation.TraceInfo}");
 
         return Report.HasErrors 
             ? new Result<T>(Report)

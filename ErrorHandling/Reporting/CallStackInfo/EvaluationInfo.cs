@@ -18,4 +18,4 @@ internal readonly struct EvaluationInfo
     public override readonly string ToString() =>
         $"[File]:         {_callerFilePath}\n" +
         $"[Method, Line]: {_callerMethodName}, {_callerLineNumber}\n";
-}
+} 

@@ -5,5 +5,5 @@ using ErrorHandling.Evaluating;
 
 var evaluation = Evaluation.Init();
 
-evaluation.Evaluate(Person.Create(Name.Create("gregg"),
-                                  Name.Create("allman")));
+evaluation.Evaluate(Person.Create(Name.Create("Greg"),
+                                  Name.Create("Allman")));
