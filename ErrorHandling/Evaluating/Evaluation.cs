@@ -25,22 +25,17 @@ public readonly struct Evaluation
         return new(callerFilePath, callerMemberName, callerLineNumber);
     }
 
-    public unsafe Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject)
+    public Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject)
     {
-        fixed (Evaluation* pointer = &this)
-            return new(subject, pointer);
+        return new(subject, this);
     }
 
-    public unsafe Evaluation* Evaluate<TSubject>(Result<TSubject> result)
+    public Evaluation Evaluate<TSubject>(Result<TSubject> result)
     {
-        fixed (Evaluation* pointer = &this)
-        {
-            if (!result.Report.HasErrors) return pointer;
-
-            Report.LogIncoming(result.Report);
-            return pointer;
-        }
-
+        if (!result.Report.HasErrors) return this;
+       
+        Report.LogIncoming(result.Report);
+        return this;
     }
 
     public Result<T> YieldResult<T>(Func<T> createDelegate)
