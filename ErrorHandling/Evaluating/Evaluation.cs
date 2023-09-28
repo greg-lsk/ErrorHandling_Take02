@@ -1,18 +1,20 @@
 ﻿using ErrorHandling.Reporting;
-using ErrorHandling.Reporting.Collections;
+using ErrorHandling.Reporting.CallStackInfo;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.JavaScript;
 
 
 namespace ErrorHandling.Evaluating;
 
 public readonly struct Evaluation
 {
-    internal readonly ReportCollection Reports;
+    internal EvaluationInfo TraceInfo { get; }
+    internal EvaluationReport Report { get; }
+
 
     internal Evaluation(string callerFilePath, string callerMemberName, int callerLineNumber)
     {
-        Reports = new( new(callerFilePath, callerMemberName, callerLineNumber) );
+        Report = new();
+        TraceInfo = new(callerFilePath, callerMemberName, callerLineNumber);
     }
 
     public static Evaluation Init(
@@ -23,23 +25,28 @@ public readonly struct Evaluation
         return new(callerFilePath, callerMemberName, callerLineNumber);
     }
 
-    public Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject,
-                                                  [CallerLineNumber] int callerLineNumber = 0)
+    public unsafe Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject)
     {
-        return new(subject, callerLineNumber, this);
+        fixed (Evaluation* pointer = &this)
+            return new(subject, pointer);
     }
 
-    public Evaluation Evaluate<TSubject>(Result<TSubject> result,
-                                         [CallerLineNumber] int callerLineNumber = 0)
+    public unsafe Evaluation* Evaluate<TSubject>(Result<TSubject> result)
     {
-        ReportSynchronizer.MergeReports(Reports, result.Reports);
-        return this;
+        fixed (Evaluation* pointer = &this)
+        {
+            if (!result.Report.HasErrors) return pointer;
+
+            Report.LogIncoming(result.Report);
+            return pointer;
+        }
+
     }
 
     public Result<T> YieldResult<T>(Func<T> createDelegate)
     {
-        return new Result<T>(createDelegate.Invoke(), Reports);
-    }
+        if (Report.HasErrors) Console.WriteLine(TraceInfo);
 
-    public void Print() => Reports.Print();
+        return new Result<T>(createDelegate.Invoke(), Report);
+    }
 }

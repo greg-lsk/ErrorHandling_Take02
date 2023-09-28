@@ -1,4 +1,5 @@
-﻿using ErrorHandling.Reporting.Collections;
+﻿using ErrorHandling.Reporting;
+using ErrorHandling.Reporting.Collections;
 
 
 namespace ErrorHandling;
@@ -7,20 +8,18 @@ public class Result<T>
 {
     public T? Value { get; private set; }
 
-    internal readonly ReportCollection Reports;
+    internal readonly EvaluationReport Report;
 
 
-    internal Result(T value, ReportCollection reports)
+    internal Result(T value, EvaluationReport report)
     {
             Value = value;
-            Reports = reports;
+            Report = report;
     }
 
-    internal Result(ReportCollection reports)
+    internal Result(EvaluationReport report)
     {
         Value = default;
-        Reports = reports;
+        Report = report;
     }
-
-    public void Print() => Reports.Print();
 }

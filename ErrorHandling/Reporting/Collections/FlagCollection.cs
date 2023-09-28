@@ -31,19 +31,13 @@ internal struct FlagCollection
 
     public override readonly string ToString()
     {
-        StringBuilder stringBuilder = new();
+        var returnValue = _report.ToString();
 
-        stringBuilder.Append(_report.ToString())
-                     .Append('\n');
+        if (_reportList is null) return returnValue + "\n";
 
-        if (_reportList is null)
-            return stringBuilder.ToString();
-
-        for (int i = 0; i < _reportList.Count; ++i)
-            stringBuilder.Append(_reportList[i].ToString());
-
-        stringBuilder.Append('\n');
-
-        return stringBuilder.ToString();
+        foreach(var flagInfo in _reportList)
+            returnValue += "\n" + flagInfo.ToString();
+        
+        return returnValue;
     }
 }

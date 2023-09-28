@@ -1,5 +1,4 @@
 ﻿using ErrorHandling.Reporting;
-using System.Runtime.CompilerServices;
 
 
 namespace ErrorHandling.Evaluating;
@@ -7,32 +6,27 @@ namespace ErrorHandling.Evaluating;
 public partial class Evaluator<TSubject>
 {
     private TSubject? _subject;
-    private ReportIndex _reportIndex;
     private readonly Evaluation _evaluation;
 
     private bool _operationSeized;
     private AttachingBehaviour _attachingBehaviour;
 
-    private EvaluationReport CurrentReport 
-        => _evaluation.Reports[_reportIndex.reportLink];
+    private int _reportLink;
+    private EvaluationReport Report => _evaluation.Report;
 
-    private bool AbortExamination 
-        => _attachingBehaviour == AttachingBehaviour.OnErrorStop 
-        && CurrentReport.HasErrors;
+    private bool ErrorsOccured => Report.EvaluationYieldedErrors(_reportLink);
+    private bool AbortExamination
+        => _attachingBehaviour == AttachingBehaviour.OnErrorStop
+        && ErrorsOccured;
 
 
     internal Evaluator(TSubject? subject,
-                       int callerLineNumber,
                        Evaluation evaluation)
     {
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
 
         _evaluation = evaluation;
-        _reportIndex = new();
-
-        CurrentReport.LogEvaluation(
-            index:      ref _reportIndex,
-            lineNumber: callerLineNumber);
+        _reportLink = Report.NextLink;
 
         if (subject is null)
         {
@@ -44,14 +38,10 @@ public partial class Evaluator<TSubject>
     }
 
 
-    public Evaluator<TSubject> Evaluate(TSubject? subject,
-                                        [CallerLineNumber] int callerLineNumber = 0)
+    public Evaluator<TSubject> Evaluate(TSubject? subject)
     {
         ResetState();
-
-        CurrentReport.LogEvaluation(
-            index:      ref _reportIndex,
-            lineNumber: callerLineNumber);
+        _reportLink = Report.NextLink;
 
         if (subject is null)
         {
@@ -63,21 +53,18 @@ public partial class Evaluator<TSubject>
         return this;
     }
 
-    public Evaluator<TNewSubject> Evaluate<TNewSubject>(TNewSubject? subject,
-                                                        [CallerLineNumber] int callerLineNumber = 0)
+    public Evaluator<TNewSubject> Evaluate<TNewSubject>(TNewSubject? subject)
     {
-        return new(subject, callerLineNumber, _evaluation);
+        return new(subject, _evaluation);
     }
 
-    public Evaluation Evaluate(Result<TSubject> result,
-                               [CallerLineNumber] int callerLineNumber = 0)
+    public ref readonly Evaluation Evaluate(Result<TSubject> result)
     {
-        CurrentReport.LogExternal(
-            index:           ref _reportIndex,
-            lineNumber:      callerLineNumber,
-            collectionIndex: ReportSynchronizer.MergeReports(_evaluation.Reports, result.Reports));
+        if (!result.Report.HasErrors) return ref _evaluation;
 
-        return _evaluation;
+        Report.LogIncoming(result.Report);
+
+        return ref _evaluation;
     }
 
     public Evaluator<TSubject> Examine(in IncomplianceRecord<TSubject> incompliance)
@@ -91,10 +78,12 @@ public partial class Evaluator<TSubject>
         if (incompliance.Severity == IncomplianceSeverity.Fatal) 
             _operationSeized = true;
 
-        CurrentReport.LogIncompliance(
-            index:    ref _reportIndex,
-            flag:     incompliance.Flag,
-            severity: incompliance.Severity);
+        Console.WriteLine($"[{incompliance.Severity}]:{incompliance.Flag}");
+
+        Report.LogIncompliance(
+            reportLink: ref _reportLink,
+            flag:       incompliance.Flag,
+            severity:   incompliance.Severity);
         
         return this;
     }
@@ -115,19 +104,21 @@ public partial class Evaluator<TSubject>
 
     public Result<T> YieldResult<T>(Func<T> createDelegate)
     {
-        return CurrentReport.HasErrors 
-            ? new Result<T>(_evaluation.Reports)
-            : new Result<T>(createDelegate.Invoke(), _evaluation.Reports);
+        if (ErrorsOccured) Console.WriteLine(_evaluation.TraceInfo);
+
+        return Report.HasErrors 
+            ? new Result<T>(Report)
+            : new Result<T>(createDelegate.Invoke(), Report);
     }
 
     private void NullDetected()
-    {      
+    {
         _operationSeized = true;
 
-        CurrentReport.LogIncompliance(
-            index:    ref _reportIndex,
-            flag:     UniversalFlags.NullDetected,
-            severity: IncomplianceSeverity.Fatal);
+        Report.LogIncompliance(
+            reportLink: ref _reportLink,
+            flag:       UniversalFlags.NullDetected,
+            severity:   IncomplianceSeverity.Fatal);
     }
     private void ResetState()
     { 

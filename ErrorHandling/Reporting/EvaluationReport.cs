@@ -1,83 +1,74 @@
-﻿using System.Text;
-using ErrorHandling.Reporting.Collections;
-using ErrorHandling.Reporting.CallStackInfo;
+﻿using ErrorHandling.Reporting.Collections;
 
 
 namespace ErrorHandling.Reporting;
 
 internal class EvaluationReport
 {
-    private readonly EvaluationInfo _evaluationInfo;
-    private readonly List<EvaluatorInfo> _evaluations;
-
-    private readonly List<int> _flagLinks;
+    private int _linksProvided;
     private List<FlagCollection>? _flags;
 
+    internal int NextLink => _linksProvided++;
     internal bool HasErrors => _flags is not null;
+    
 
-
-    internal EvaluationReport(string callerFilePath,
-                              string callerMethodName,
-                              int callerLineNumber)
+    internal void LogIncompliance(ref int reportLink, Enum flag, IncomplianceSeverity severity)
     {
-        _evaluationInfo = new(callerFilePath, callerMethodName, callerLineNumber);
-        _flagLinks = new() { };
-        _evaluations = new();
-    }
-
-
-    internal void LogEvaluation(ref ReportIndex index, int lineNumber)
-    {
-        _flagLinks.Add(-1);
-
-        _evaluations.Add(new(lineNumber));
-
-        ReportSynchronizer.UpdateEvaluationLink(ref index, _evaluations);
-    }
-
-    internal void LogIncompliance(ref ReportIndex index, Enum flag, IncomplianceSeverity severity)
-    {
-        _flagLinks[index.evaluationLink] = index.evaluationLink;
-        
-        if (_flags is null)
+        switch (Behaviour(reportLink))
         {
-            _flags = new() { new(flag, severity) };
-            return;
-        }
+            case (AddAction.CreateList):
+                _flags = new() { new(flag, severity) };
+                reportLink = _flags.Count - 1;
+                break;
 
-        if (index.evaluationLink < _flags.Count)
-        {
-            var flags = _flags[index.evaluationLink];
-            flags.Add(flag, severity);
-            _flags[index.evaluationLink] = flags;
-            return;
-        }
+            case (AddAction.IndexedAdd):
+                _flags![reportLink].Add(flag, severity);
+                break;
 
-        _flags.Add( new(flag, severity) );
+            case (AddAction.NewFlagCollection):
+                _flags!.Add(new(flag, severity));
+                reportLink = _flags.Count - 1;
+                break;
+        }
     }
 
-    internal void LogExternal(ref ReportIndex index, int lineNumber, int collectionIndex)
+    internal void LogIncoming(EvaluationReport report)
     {
-        _flagLinks.Add(ReportSynchronizer.Transform(collectionIndex));
+        switch(_flags, report._flags)
+        {
+            case (null, null): break;
 
-        _evaluations.Add(new(lineNumber));
+            case (_, null): break;
 
-        ReportSynchronizer.UpdateEvaluationLink(ref index, _evaluations);
+            case (null, _):
+                _flags = new();
+                _flags = report._flags;
+                break;
+
+            case (_, _):
+                _flags.AddRange(report._flags); 
+                break;
+        }
     }
 
-    internal void Print()
+    internal bool EvaluationYieldedErrors(int reportLink) 
+        => _flags is not null && reportLink <= _flags.Count;
+
+
+    private enum AddAction
     {
-        var stringBuilder = new StringBuilder();
-        stringBuilder.Append(_evaluationInfo.ToString());
+        CreateList,
+        NewFlagCollection,
+        IndexedAdd
+    }
+    private AddAction Behaviour(int reportLink)
+    {
+        if (_flags is null) return AddAction.CreateList;
 
-        for (int i = 0; i < _flagLinks.Count; ++i)
+        return reportLink.CompareTo(_flags.Count) switch
         {
-            if (_flagLinks[i] != -1)
-                stringBuilder.Append("  ")
-                             .Append(_evaluations[i].ToString())
-                             .Append(_flags![_flagLinks[i]].ToString());
-        }
-
-        Console.WriteLine(stringBuilder.ToString());
+            1 => AddAction.NewFlagCollection,
+            _ => AddAction.IndexedAdd 
+        };
     }
 }
