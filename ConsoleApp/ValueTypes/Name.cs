@@ -1,5 +1,6 @@
-﻿using ErrorHandling;
-using ErrorHandling.Evaluating;
+﻿using ErrorHandling.Evaluating;
+using ErrorHandling.Result;
+
 
 namespace ConsoleApp.ValueTypes;
 
@@ -12,12 +13,12 @@ public struct Name
     {
         var evaluation = Evaluation.Init();
 
-        return evaluation
-            .Evaluate(stringValue)
-            .CaptureAll()
-                .Examine(in Incompliance.NameIsEmpty)
-                .Examine(in Incompliance.NameStartsWithLowerCase)
-                .Examine(in Incompliance.NameExceedsLength, MaxLength)
-            .YieldResult<Name>(() => new() { StringValue = stringValue });
+        evaluation.Evaluate(stringValue)
+                  .CaptureAll()
+                    .Examine(in Incompliance.NameIsEmpty)
+                    .Examine(in Incompliance.NameStartsWithLowerCase)
+                    .Examine(in Incompliance.NameExceedsLength, MaxLength);
+
+        return evaluation.YieldResult<Name>(() => new() { StringValue = stringValue });
     }
 }

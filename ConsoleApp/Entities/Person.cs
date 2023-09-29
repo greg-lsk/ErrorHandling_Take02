@@ -1,6 +1,6 @@
 ﻿using ConsoleApp.ValueTypes;
-using ErrorHandling;
 using ErrorHandling.Evaluating;
+using ErrorHandling.Result;
 
 
 namespace ConsoleApp.Entities;
@@ -22,9 +22,8 @@ public class Person
                                         Result<Name> lastName)
     {
         var evaluation = Evaluation.Init();
-
-        return evaluation.Evaluate(firstName)
-                         .Evaluate(lastName)
-                         .YieldResult<Person>(() => new(firstName.Value, lastName.Value));
+        evaluation.Evaluate(firstName, lastName);
+                
+        return evaluation.YieldResult<Person>(() => new(firstName.Value, lastName.Value));
     }
 }

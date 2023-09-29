@@ -16,7 +16,7 @@ public partial class Evaluator<TSubject>
             _operationSeized = true;
 
         Console.WriteLine($"[{incompliance.Severity}]:{incompliance.Flag}");
-        Report.LogIncompliance(
+        _report.LogIncompliance(
             reportLink: ref _reportLink,
             flag:       incompliance.Flag,
             severity:   incompliance.Severity);

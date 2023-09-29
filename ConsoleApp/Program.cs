@@ -1,9 +1,8 @@
 ﻿using ConsoleApp.Entities;
 using ConsoleApp.ValueTypes;
-using ErrorHandling.Evaluating;
 
 
-var evaluation = Evaluation.Init();
+var firstName = Name.Create("Gregg");
+var lastName = Name.Create("allman");
 
-evaluation.Evaluate(Person.Create(Name.Create("Greg"),
-                                  Name.Create("Allman")));
+var person = Person.Create(firstName, lastName);

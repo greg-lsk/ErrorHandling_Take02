@@ -1,66 +1,58 @@
-﻿using ErrorHandling.Reporting.Collections;
+﻿using ErrorHandling.Reporting.Abstract;
 
 
 namespace ErrorHandling.Reporting;
 
-internal class EvaluationReport
+internal class EvaluationReport : IdentifiableReport
 {
-    internal Guid ReportId { get; init; }
     internal List<Guid>? externalReports;
 
     private int _linksProvided;
-    private List<FlagCollection>? _flags;
 
     internal int NextLink => _linksProvided++;
-    internal bool HasErrors => _flags is not null;
+    internal bool HasErrors => Flags is not null;
 
 
-    internal EvaluationReport() => ReportId = Guid.NewGuid();
+    internal EvaluationReport() : base() { }
 
 
     internal void LogIncompliance(ref int reportLink, Enum flag, IncomplianceSeverity severity)
     {
         switch (Behaviour(reportLink))
         {
-            case (AddAction.CreateList):
-                _flags = new() { new(flag, severity) };
-                reportLink = _flags.Count - 1;
+            case AddAction.CreateList:
+                Flags = new() { new(flag, severity) };
+                reportLink = Flags.Count - 1;
                 break;
 
-            case (AddAction.IndexedAdd):
-                _flags![reportLink].Add(flag, severity);
+            case AddAction.IndexedAdd:
+                Flags![reportLink].Add(flag, severity);
                 break;
 
-            case (AddAction.NewFlagCollection):
-                _flags!.Add(new(flag, severity));
-                reportLink = _flags.Count - 1;
+            case AddAction.NewFlagCollection:
+                Flags!.Add(new(flag, severity));
+                reportLink = Flags.Count - 1;
                 break;
         }
     }
 
-    internal void LogExternal(EvaluationReport report)
+    internal void LogExternal(IdentifiableReport report)
     {
-        switch(_flags, report._flags)
+        MergeWith(report);
+
+        if (report.Flags is null) return;
+
+        if (externalReports is not null)
         {
-            case (null, null): break;
-
-            case (_, null): break;
-
-            case (null, _):
-                _flags = new();
-                _flags = report._flags;
-                UpdateExternalReports(report);
-                break;
-
-            case (_, _):
-                _flags.AddRange(report._flags);
-                UpdateExternalReports(report);
-                break;
+            externalReports.Add(report.ReportId);
+            return;
         }
+
+        externalReports = new() { report.ReportId };
     }
 
     internal bool EvaluationYieldedErrors(int reportLink) 
-        => _flags is not null && reportLink <= _flags.Count;
+        => Flags is not null && reportLink <= Flags.Count;
 
 
     private enum AddAction
@@ -71,24 +63,15 @@ internal class EvaluationReport
     }
     private AddAction Behaviour(int reportLink)
     {
-        if (_flags is null) return AddAction.CreateList;
+        if (Flags is null) return AddAction.CreateList;
 
-        return reportLink.CompareTo(_flags.Count) switch
+        return reportLink.CompareTo(Flags.Count) switch
         {
             1 => AddAction.NewFlagCollection,
             _ => AddAction.IndexedAdd 
         };
     }
-    private void UpdateExternalReports(EvaluationReport report)
-    {
-        if(externalReports is not null)
-        {
-            externalReports.Add(report.ReportId);
-            return;
-        }
-
-        externalReports = new() { report.ReportId };
-    }
+    
 
     internal string StringRep()
     {

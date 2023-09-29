@@ -1,4 +1,5 @@
-﻿using ErrorHandling.Reporting;
+﻿using ErrorHandling.Result;
+using ErrorHandling.Reporting;
 using ErrorHandling.Reporting.CallStackInfo;
 using System.Runtime.CompilerServices;
 
@@ -27,21 +28,30 @@ public readonly struct Evaluation
 
     public Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject)
     {
-        return new(subject, this);
+        return new(subject, Report);
     }
 
-    public Evaluation Evaluate<TSubject>(Result<TSubject> result)
+    public void Evaluate(IResult result)
     {
-        if (!result.Report.HasErrors) return this;
-       
-        Report.LogExternal(result.Report);
-        return this;
+        if (result.IsValid) return;
+
+        Report.LogExternal(result.Report!);
+    }
+
+    public void Evaluate(params IResult[] results)
+    {
+        for(int i = 0; i<results.Length; ++i)
+            if (!results[i].IsValid) Report.LogExternal(results[i].Report!);
     }
 
     public Result<T> YieldResult<T>(Func<T> createDelegate)
     {
-        if (Report.HasErrors) Console.WriteLine($"{Report.StringRep()}\n{TraceInfo}");
+        if (Report.HasErrors)
+        {
+            Console.WriteLine($"{Report.StringRep()}\n{TraceInfo}");
+            return new( new ResultReport(Report.ReportId, Report.Flags!) );
+        }
 
-        return new Result<T>(createDelegate.Invoke(), Report);
+        return new(createDelegate.Invoke());
     }
 }

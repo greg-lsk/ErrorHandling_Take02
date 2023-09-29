@@ -6,26 +6,25 @@ namespace ErrorHandling.Evaluating;
 public partial class Evaluator<TSubject>
 {
     private TSubject? _subject;
-    private readonly Evaluation _evaluation;
 
     private bool _operationSeized;
     private AttachingBehaviour _attachingBehaviour;
 
     private int _reportLink;
-    private EvaluationReport Report => _evaluation.Report;
+    private readonly EvaluationReport _report;
 
-    private bool ErrorsOccured => Report.EvaluationYieldedErrors(_reportLink);
+    private bool ErrorsOccured => _report.EvaluationYieldedErrors(_reportLink);
     private bool AbortExamination => _attachingBehaviour == AttachingBehaviour.OnErrorStop
                                      && ErrorsOccured;
 
 
     internal Evaluator(TSubject? subject,
-                       Evaluation evaluation)
+                       EvaluationReport report)
     {
         _attachingBehaviour = AttachingBehaviour.OnErrorStop;
 
-        _evaluation = evaluation;
-        _reportLink = Report.NextLink;
+        _report = report;
+        _reportLink = _report.NextLink;
 
         if (subject is null)
         {
@@ -40,7 +39,7 @@ public partial class Evaluator<TSubject>
     public Evaluator<TSubject> Evaluate(TSubject? subject)
     {
         ResetState();
-        _reportLink = Report.NextLink;
+        _reportLink = _report.NextLink;
 
         if (subject is null)
         {
@@ -54,16 +53,7 @@ public partial class Evaluator<TSubject>
 
     public Evaluator<TNewSubject> Evaluate<TNewSubject>(TNewSubject? subject)
     {
-        return new(subject, _evaluation);
-    }
-
-    public ref readonly Evaluation Evaluate(Result<TSubject> result)
-    {
-        if (!result.Report.HasErrors) return ref _evaluation;
-
-        Report.LogExternal(result.Report);
-
-        return ref _evaluation;
+        return new(subject, _report);
     }
 
     public Evaluator<TSubject> Examine(in IncomplianceRecord<TSubject> incompliance)
@@ -79,7 +69,7 @@ public partial class Evaluator<TSubject>
 
         Console.WriteLine($"[{incompliance.Severity}]:{incompliance.Flag}");
 
-        Report.LogIncompliance(
+        _report.LogIncompliance(
             reportLink: ref _reportLink,
             flag:       incompliance.Flag,
             severity:   incompliance.Severity);
@@ -99,22 +89,12 @@ public partial class Evaluator<TSubject>
         return this;
     }
 
-    public ref readonly Evaluation Snooze() => ref _evaluation;
-
-    public Result<T> YieldResult<T>(Func<T> createDelegate)
-    {
-        if (ErrorsOccured) Console.WriteLine($"{Report.StringRep()}\n{_evaluation.TraceInfo}");
-
-        return Report.HasErrors 
-            ? new Result<T>(Report)
-            : new Result<T>(createDelegate.Invoke(), Report);
-    }
 
     private void NullDetected()
     {
         _operationSeized = true;
 
-        Report.LogIncompliance(
+        _report.LogIncompliance(
             reportLink: ref _reportLink,
             flag:       UniversalFlags.NullDetected,
             severity:   IncomplianceSeverity.Fatal);
