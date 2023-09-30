@@ -44,30 +44,36 @@ public readonly struct Evaluation
             if (!results[i].IsValid) Report.LogExternal(results[i].Report!);
     }
 
-     
-
-    public Result<T> YieldResultFull<T>(Func<T> createDelegate)
+    public Result<TResult> YieldResult<TResult>(Func<TResult> yieldDelegate)
     {
-        if (Report.HasErrors)
-        {
-            Console.WriteLine($"{Report.StringRep()}\n{TraceInfo}");
-            return new( new ResultReport(Report.ReportId, Report.Flags!) );
-        }
-
-        return new(createDelegate.Invoke());
+        if (Report.HasErrors) return Result<TResult>();
+        
+        return new(yieldDelegate.Invoke());
     }
-    public VoidResult YieldResultVoid<T1>(T1 param01, Func<T1, IResult> createAction)
+
+    public VoidResult YieldVoid(Action yieldAction)
     {
-        if (Report.HasErrors)
-        {
-            Console.WriteLine($"{Report.StringRep()}\n{TraceInfo}");
-            return new(new ResultReport(Report.ReportId, Report.Flags!));
-        }
+        if (Report.HasErrors) return Void();
 
-        var result = createAction.Invoke(param01);
-        if (result.IsValid) return new();
+        yieldAction.Invoke();
+        return new();
+    }
+    public VoidResult YieldVoid<T1>(T1 param01, Action<T1> yieldAction)
+    {
+        if (Report.HasErrors) return Void();
 
-        Report.LogExternal(result.Report!);
+        yieldAction.Invoke(param01);
+        return new();
+    }
+
+
+    private VoidResult Void()
+    {
+        Console.WriteLine($"{Report.StringRep()}\n{TraceInfo}");
+        return new(new ResultReport(Report.ReportId, Report.Flags!));
+    }
+    private Result<TReturn> Result<TReturn>()
+    {
         Console.WriteLine($"{Report.StringRep()}\n{TraceInfo}");
         return new(new ResultReport(Report.ReportId, Report.Flags!));
     }

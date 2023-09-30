@@ -27,7 +27,7 @@ public class Person
 
         evaluation.Evaluate(firstName, lastName);
         
-        return evaluation.YieldResultFull<Person>(() => new(firstName.Value, lastName.Value));
+        return evaluation.YieldResult<Person>(() => new(firstName.Value, lastName.Value));
     }
 
     public VoidResult Rename(StructSelector<Person, Name> selectionDelegate,
@@ -38,12 +38,9 @@ public class Person
         var newName = Name.Create(param);
         evaluation.Evaluate(newName as IResult);
 
-        return evaluation.YieldResultVoid(
-            newName.Value.StringValue, (sv) => 
-        {
-            selectionDelegate.Invoke(this) = new(sv);
-            return new VoidResult();
-        });
+        return evaluation.YieldVoid(
+            newName.Value.StringValue, 
+            (sv) => selectionDelegate.Invoke(this) = new(sv));
     }
 
     public void Print() => Console.WriteLine($"{_firstName.StringValue}\n" +

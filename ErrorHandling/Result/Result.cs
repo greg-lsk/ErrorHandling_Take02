@@ -10,12 +10,12 @@ public class Result<T> : IResult
 
     public bool IsValid => Report is null;
 
-    internal Result(T value)
+    public Result(T value)
     {
         Value = value;
     }
 
-    internal Result(ResultReport report)
+    public Result(ResultReport report)
     {
         Value = default;
         Report = report;

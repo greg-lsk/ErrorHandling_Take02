@@ -21,6 +21,6 @@ public readonly struct Name
                     .Examine(in Incompliance.NameStartsWithLowerCase)
                     .Examine(in Incompliance.NameExceedsLength, MaxLength);
 
-        return evaluation.YieldResultFull<Name>(() => new(stringValue));
+        return evaluation.YieldResult<Name>(() => new(stringValue));
     }
 }
