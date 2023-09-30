@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace ErrorHandling.Evaluating;
 
-public readonly struct Evaluation
+public readonly partial struct Evaluation
 {
     internal EvaluationInfo TraceInfo { get; }
     internal EvaluationReport Report { get; }
@@ -56,13 +56,6 @@ public readonly struct Evaluation
         if (Report.HasErrors) return Void();
 
         yieldAction.Invoke();
-        return new();
-    }
-    public VoidResult YieldVoid<T1>(T1 param01, Action<T1> yieldAction)
-    {
-        if (Report.HasErrors) return Void();
-
-        yieldAction.Invoke(param01);
         return new();
     }
 
