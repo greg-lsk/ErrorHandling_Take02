@@ -30,6 +30,20 @@ public class Person
                                       lastName.Value,
                                       (fn, ln) => new Person(fn, ln));
     }
+    public static Result<Person> Create(string firstName, string lastName)
+    {
+        var evaluation = Evaluation.Init();
+
+        var firstNameR = Name.Create(firstName);
+        var lastNameR = Name.Create(lastName);
+
+        evaluation.Evaluate(firstNameR, lastNameR);
+
+        return evaluation.YieldResult(firstNameR.Value,
+                                      lastNameR.Value,
+                                      (fn, ln) => new Person(fn, ln));
+    }
+
 
     public VoidResult Rename(StructSelector<Person, Name> selectionDelegate,
                              string param)
