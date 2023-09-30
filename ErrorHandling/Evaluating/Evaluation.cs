@@ -44,7 +44,9 @@ public readonly struct Evaluation
             if (!results[i].IsValid) Report.LogExternal(results[i].Report!);
     }
 
-    public Result<T> YieldResult<T>(Func<T> createDelegate)
+     
+
+    public Result<T> YieldResultFull<T>(Func<T> createDelegate)
     {
         if (Report.HasErrors)
         {
@@ -53,5 +55,20 @@ public readonly struct Evaluation
         }
 
         return new(createDelegate.Invoke());
+    }
+    public VoidResult YieldResultVoid<T1>(T1 param01, Func<T1, IResult> createAction)
+    {
+        if (Report.HasErrors)
+        {
+            Console.WriteLine($"{Report.StringRep()}\n{TraceInfo}");
+            return new(new ResultReport(Report.ReportId, Report.Flags!));
+        }
+
+        var result = createAction.Invoke(param01);
+        if (result.IsValid) return new();
+
+        Report.LogExternal(result.Report!);
+        Console.WriteLine($"{Report.StringRep()}\n{TraceInfo}");
+        return new(new ResultReport(Report.ReportId, Report.Flags!));
     }
 }
