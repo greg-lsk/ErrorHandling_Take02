@@ -1,5 +1,6 @@
 ﻿using ErrorHandling.Result;
 
+
 namespace ErrorHandling.Evaluating;
 
 public readonly partial struct Evaluation
@@ -20,16 +21,14 @@ public readonly partial struct Evaluation
         return new();
     }
 
-    public Result<TResult> YieldResult<TResult, T1>(T1 param01,
-                                                    Func<T1, TResult> yieldDelegate)
+    public Result<TResult> YieldResult<TResult, T1>(T1 param01, Func<T1, TResult> yieldDelegate)
     {
         if (Report.HasErrors) return Result<TResult>();
 
         return new(yieldDelegate.Invoke(param01));
     }
 
-    public Result<TResult> YieldResult<TResult, T1, T2>(T1 param01,
-                                                        T2 param02,
+    public Result<TResult> YieldResult<TResult, T1, T2>(T1 param01, T2 param02, 
                                                         Func<T1, T2, TResult> yieldDelegate)
     {
         if (Report.HasErrors) return Result<TResult>();

@@ -24,7 +24,6 @@ public class Person
                                         Result<Name> lastName)
     {
         var evaluation = Evaluation.Init();
-
         evaluation.Evaluate(firstName, lastName);
         
         return evaluation.YieldResult(firstName.Value,
