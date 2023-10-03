@@ -1,7 +1,4 @@
-﻿using ErrorHandling.Reporting;
-
-
-namespace ErrorHandling.Result;
+﻿namespace ErrorHandling.Result;
 
 public class Result<T> : IResult
 {
@@ -20,20 +17,33 @@ public class Result<T> : IResult
         Value = default;
         Report = report;
     }
-
-    public Result<T> ActUpon(Func<T, IResult> action)
+    
+    public Result<T> ActUpon<TSelect, T1>(RefTypeSelector<T, TSelect> selector,
+                                          OnRefTypeAction<T, TSelect, T1> action,
+                                          T1 arg01)
+        where TSelect : class
     {
         if(!IsValid) return this;
         
-        var result = action.Invoke(Value!);
-
+        var result = action.Invoke(selector, Value!, arg01);
         if (result.IsValid) return this;
-
-/*        if (Report is null)
-            Report = new(Guid.NewGuid(), result.Report!.Flags!);*/
 
         return this;
     }
+
+    public Result<T> ActUpon<TSelect, T1>(StructSelector<T, TSelect> selector,
+                                          OnStructAction<T, TSelect, T1> action,
+                                          T1 arg01)
+        where TSelect : struct
+    {
+        if (!IsValid) return this;
+
+        var result = action.Invoke(selector, Value!, arg01);
+        if (result.IsValid) return this;
+
+        return this;
+    }
+
     public Result<T> ActUpon(Action<T> action)
     {
         if (!IsValid) return this;

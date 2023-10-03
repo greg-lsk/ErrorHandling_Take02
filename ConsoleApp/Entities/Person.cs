@@ -34,27 +34,18 @@ public class Person
     {
         var evaluation = Evaluation.Init();
 
+        /*This is stupid:
+            -structs and Results are created even if the strings provided are invalid
+            -must find a way to group examinations together and reuse them*/
         var firstNameR = Name.Create(firstName);
         var lastNameR = Name.Create(lastName);
+        /*This is stupid*/
 
         evaluation.Evaluate(firstNameR, lastNameR);
 
         return evaluation.YieldResult(firstNameR.Value,
                                       lastNameR.Value,
                                       (fn, ln) => new Person(fn, ln));
-    }
-
-
-    public VoidResult Rename(StructSelector<Person, Name> selectionDelegate,
-                             string param)
-    {
-        var evaluation = Evaluation.Init();
-
-        var newName = Name.Create(param);
-        evaluation.Evaluate(newName as IResult);
-
-        return evaluation.YieldVoid(newName.Value.StringValue,
-                                    (sv) => selectionDelegate.Invoke(this) = new(sv));
     }
 
     public void Print() => Console.WriteLine($"{_firstName.StringValue}\n" +
