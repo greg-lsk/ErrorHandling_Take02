@@ -6,6 +6,7 @@ namespace ErrorHandling.Reporting;
 internal class EvaluationReport : IdentifiableReport
 {
     internal List<Guid>? externalReports;
+    private List<string>? _subjectsInfo;
 
     private int _linksProvided;
 
@@ -16,22 +17,41 @@ internal class EvaluationReport : IdentifiableReport
     internal EvaluationReport() : base() { }
 
 
-    internal void LogIncompliance(ref int reportLink, Enum flag, IncomplianceSeverity severity)
+    internal void IncomplianceDetected(ref int reportLink, Enum flag, IncomplianceSeverity severity)
     {
-        switch (Behaviour(reportLink))
+        switch (OnIncomplianceDetected(reportLink))
         {
-            case AddAction.CreateList:
+            case OnIncompliance.CreateList:
                 Flags = new() { new(flag, severity) };
                 reportLink = Flags.Count - 1;
                 break;
 
-            case AddAction.IndexedAdd:
-                Flags![reportLink].Add(flag, severity);
+            case OnIncompliance.IndexedAdd:
+                var collection = Flags![reportLink];
+                collection.Add(flag, severity);
+                Flags![reportLink] = collection;
                 break;
 
-            case AddAction.NewFlagCollection:
+            case OnIncompliance.NewFlagCollection:
                 Flags!.Add(new(flag, severity));
                 reportLink = Flags.Count - 1;
+                break;
+        }
+    }
+
+    internal void TryRegisterSubjectInfo(ref int reportLink, string subjectInfo)
+    {
+        switch (OnSubjectRegistration(reportLink))
+        {
+            case OnSubjectInfo.CreateList:
+                _subjectsInfo = new() { subjectInfo };
+                break;
+
+            case OnSubjectInfo.NewSubjectInfo:
+                _subjectsInfo!.Add(subjectInfo);
+                break;
+
+            case OnSubjectInfo.AlreadyRegistered:
                 break;
         }
     }
@@ -55,32 +75,52 @@ internal class EvaluationReport : IdentifiableReport
         => Flags is not null && reportLink <= Flags.Count;
 
 
-    private enum AddAction
+    private enum OnIncompliance
     {
         CreateList,
         NewFlagCollection,
         IndexedAdd
     }
-    private AddAction Behaviour(int reportLink)
+    private OnIncompliance OnIncomplianceDetected(int reportLink)
     {
-        if (Flags is null) return AddAction.CreateList;
+        if (Flags is null) return OnIncompliance.CreateList;
 
-        return reportLink.CompareTo(Flags.Count) switch
+        return reportLink.CompareTo(Flags.Count - 1) switch
         {
-            1 => AddAction.NewFlagCollection,
-            _ => AddAction.IndexedAdd 
+            1 => OnIncompliance.NewFlagCollection,
+            _ => OnIncompliance.IndexedAdd 
         };
     }
     
+    private enum OnSubjectInfo
+    {
+        CreateList,
+        NewSubjectInfo,
+        AlreadyRegistered
+    }
+    private OnSubjectInfo OnSubjectRegistration(int reportLink)
+    {
+        if (_subjectsInfo is null) return OnSubjectInfo.CreateList;
+
+        return reportLink.CompareTo(_subjectsInfo.Count) switch
+        {
+            1 => OnSubjectInfo.NewSubjectInfo,
+            _ => OnSubjectInfo.AlreadyRegistered
+        };  
+    }
+
+
 
     internal string StringRep()
     {
-        var str = $"[ID]:           {ReportId}";
-        if (externalReports is not null)
+        if (Flags is null) return string.Empty;
+
+        string returnString = string.Empty;
+        for (int i = 0; i < Flags.Count; ++i)
         {
-            foreach(var id in externalReports)
-                str = $"{str}\n  -[ExternalErrors]{id}";
+            returnString += $"[Subject]:{_subjectsInfo![i]}{Flags[i].LogString()}";
         }
-        return str;
+
+        return returnString;
     }
 }

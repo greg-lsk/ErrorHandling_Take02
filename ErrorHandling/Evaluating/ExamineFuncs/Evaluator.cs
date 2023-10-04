@@ -15,11 +15,14 @@ public partial class Evaluator<TSubject>
         if (incompliance.Severity == IncomplianceSeverity.Fatal)
             _operationSeized = true;
 
-        Console.WriteLine($"[{incompliance.Severity}]:{incompliance.Flag}");
-        _report.LogIncompliance(
+        _report.IncomplianceDetected(
             reportLink: ref _reportLink,
             flag:       incompliance.Flag,
             severity:   incompliance.Severity);
+
+        _report.TryRegisterSubjectInfo(
+            reportLink:  ref _reportLink,
+            subjectInfo: $"{_subject}");
 
         return this;
     }

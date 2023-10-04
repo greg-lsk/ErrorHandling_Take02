@@ -1,7 +1,6 @@
 ﻿using ConsoleApp.ValueTypes;
 using ErrorHandling.Evaluating;
-using ErrorHandling.Result;
-
+using ErrorHandling.ResultUtilities;
 
 namespace ConsoleApp.Entities;
 public class Person
@@ -23,7 +22,7 @@ public class Person
     public static Result<Person> Create(Result<Name> firstName,
                                         Result<Name> lastName)
     {
-        var evaluation = Evaluation.Init();
+        var evaluation = Evaluation.Init<Person>();
         evaluation.Evaluate(firstName, lastName);
         
         return evaluation.YieldResult(firstName.Value,
@@ -32,7 +31,7 @@ public class Person
     }
     public static Result<Person> Create(string firstName, string lastName)
     {
-        var evaluation = Evaluation.Init();
+        var evaluation = Evaluation.Init<Person>();
 
         /*This is stupid:
             -structs and Results are created even if the strings provided are invalid

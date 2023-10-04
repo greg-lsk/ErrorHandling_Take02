@@ -1,6 +1,5 @@
 ﻿using ErrorHandling.Evaluating;
-using ErrorHandling.Result;
-
+using ErrorHandling.ResultUtilities;
 
 namespace ConsoleApp.ValueTypes;
 
@@ -15,7 +14,7 @@ public readonly struct Name
 
     public static Result<Name> Create(string stringValue)
     {
-        var evaluation = Evaluation.Init();
+        var evaluation = Evaluation.Init<Name>();
 
         evaluation.Evaluate(stringValue)
                   .CaptureAll()
@@ -30,7 +29,7 @@ public readonly struct Name
                                                    TSelectedFrom selectedFrom, 
                                                    string? stringValue)
     {
-        var evaluation = Evaluation.Init();
+        var evaluation = Evaluation.Init<Name>();
 
         evaluation.Evaluate(stringValue)
           .CaptureAll()

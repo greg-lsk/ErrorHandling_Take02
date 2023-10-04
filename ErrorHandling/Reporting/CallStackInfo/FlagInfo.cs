@@ -13,5 +13,5 @@ internal readonly struct FlagInfo
     }
 
 
-    public override readonly string ToString() => $"   -[{_severity}]: {_errorFlag}";
+    public override readonly string ToString() => $" |-[{_severity}]: {_errorFlag}";
 }

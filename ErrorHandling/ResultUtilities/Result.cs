@@ -1,4 +1,4 @@
-﻿namespace ErrorHandling.Result;
+﻿namespace ErrorHandling.ResultUtilities;
 
 public class Result<T> : IResult
 {
@@ -17,14 +17,14 @@ public class Result<T> : IResult
         Value = default;
         Report = report;
     }
-    
+
     public Result<T> ActUpon<TSelect, T1>(RefTypeSelector<T, TSelect> selector,
                                           OnRefTypeAction<T, TSelect, T1> action,
                                           T1 arg01)
         where TSelect : class
     {
-        if(!IsValid) return this;
-        
+        if (!IsValid) return this;
+
         var result = action.Invoke(selector, Value!, arg01);
         if (result.IsValid) return this;
 

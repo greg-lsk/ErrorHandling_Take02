@@ -1,5 +1,4 @@
-﻿using ErrorHandling.Result;
-
+﻿using ErrorHandling.ResultUtilities;
 
 namespace ErrorHandling.Evaluating;
 

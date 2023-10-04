@@ -1,5 +1,4 @@
-﻿using System.Text;
-using ErrorHandling.Reporting.CallStackInfo;
+﻿using ErrorHandling.Reporting.CallStackInfo;
 
 
 namespace ErrorHandling.Reporting.Collections;
@@ -29,14 +28,14 @@ internal struct FlagCollection
         _reportList = new() { new(flag, severity) };
     }
 
-    public override readonly string ToString()
+    internal readonly string LogString()
     {
-        var returnValue = _report.ToString();
+        var returnValue = "\n      " + _report.ToString();
 
-        if (_reportList is null) return returnValue + "\n";
+        if (_reportList is null) return returnValue;
 
         foreach(var flagInfo in _reportList)
-            returnValue += "\n" + flagInfo.ToString();
+            returnValue += "\n      " + flagInfo.ToString();
         
         return returnValue;
     }

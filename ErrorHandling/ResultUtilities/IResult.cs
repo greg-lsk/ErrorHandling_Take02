@@ -1,6 +1,4 @@
-﻿using ErrorHandling.Reporting;
-
-namespace ErrorHandling.Result;
+﻿namespace ErrorHandling.ResultUtilities;
 
 public interface IResult
 {

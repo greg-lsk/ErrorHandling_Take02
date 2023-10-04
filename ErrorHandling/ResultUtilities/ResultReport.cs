@@ -2,7 +2,7 @@
 using ErrorHandling.Reporting.Collections;
 
 
-namespace ErrorHandling.Result;
+namespace ErrorHandling.ResultUtilities;
 
 public class ResultReport : IdentifiableReport
 {

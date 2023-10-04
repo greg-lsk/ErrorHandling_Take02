@@ -67,13 +67,15 @@ public partial class Evaluator<TSubject>
         if (incompliance.Severity == IncomplianceSeverity.Fatal) 
             _operationSeized = true;
 
-        Console.WriteLine($"[{incompliance.Severity}]:{incompliance.Flag}");
-
-        _report.LogIncompliance(
+        _report.IncomplianceDetected(
             reportLink: ref _reportLink,
             flag:       incompliance.Flag,
             severity:   incompliance.Severity);
-        
+
+        _report.TryRegisterSubjectInfo(
+            reportLink:  ref _reportLink, 
+            subjectInfo: $"{_subject}");
+
         return this;
     }
 
@@ -89,15 +91,18 @@ public partial class Evaluator<TSubject>
         return this;
     }
 
-
     private void NullDetected()
     {
         _operationSeized = true;
 
-        _report.LogIncompliance(
+        _report.IncomplianceDetected(
             reportLink: ref _reportLink,
             flag:       UniversalFlags.NullDetected,
             severity:   IncomplianceSeverity.Fatal);
+
+        _report.TryRegisterSubjectInfo(
+            reportLink: ref _reportLink,
+            subjectInfo: "null");
     }
     private void ResetState()
     { 
