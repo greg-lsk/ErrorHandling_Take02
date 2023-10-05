@@ -12,7 +12,7 @@ public class FlagInfoBuilding
 {
     FlagInfo flagInfo = new(Mock.FlagPlaceholder, IncomplianceSeverity.Error);
 
-    [Benchmark]
+    [Benchmark(Baseline = true)]
     public string StringConcatReturn()
     {
         return flagInfo.ToString();
@@ -22,5 +22,11 @@ public class FlagInfoBuilding
     public Span<char> SpanReturn()
     {
         return flagInfo.SpanView;
+    }
+
+    [Benchmark]
+    public Memory<char> MemoryReturn()
+    {
+        return flagInfo.MemoryView;
     }
 }
