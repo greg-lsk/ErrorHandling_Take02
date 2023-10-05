@@ -1,20 +1,26 @@
-﻿using BenchmarkDotNet;
+﻿using System;
 using BenchmarkDotNet.Attributes;
+
 using ErrorHandling.Benchmark.Utilities;
 using ErrorHandling.Reporting.CallStackInfo;
-using System;
 
 
-namespace ErrorHandling.Benchmark;
+namespace ErrorHandling.Benchmark.LogMessageBuilding;
 
 [MemoryDiagnoser]
-public class LogStringBuilding
+public class FlagInfoBuilding
 {
     FlagInfo flagInfo = new(Mock.FlagPlaceholder, IncomplianceSeverity.Error);
 
     [Benchmark]
-    public string StringConcatination()
+    public string StringConcatReturn()
     {
         return flagInfo.ToString();
+    }
+
+    [Benchmark]
+    public Span<char> SpanReturn()
+    {
+        return flagInfo.SpanView;
     }
 }

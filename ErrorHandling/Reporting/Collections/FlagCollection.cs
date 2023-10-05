@@ -30,12 +30,12 @@ internal struct FlagCollection
 
     internal readonly string LogString()
     {
-        var returnValue = "\n      " + _report.ToString();
+        var returnValue = "\n      " + _report.ErrorFlagPart();
 
         if (_reportList is null) return returnValue;
 
         foreach(var flagInfo in _reportList)
-            returnValue += "\n      " + flagInfo.ToString();
+            returnValue += "\n      " + flagInfo.ErrorFlagPart();
         
         return returnValue;
     }

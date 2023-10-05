@@ -2,7 +2,7 @@
 
 public enum IncomplianceSeverity
 {
-    Warning,
+    Alert,
     Error,
     Fatal
 }

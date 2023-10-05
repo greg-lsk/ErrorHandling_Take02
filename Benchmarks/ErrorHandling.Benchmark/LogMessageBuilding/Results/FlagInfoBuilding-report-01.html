@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>ErrorHandling.Benchmark.LogMessageBuilding.FlagInfoBuilding-20231005-225009</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.13.8, Windows 10 (10.0.19045.3448/22H2/2022Update)
+Intel Celeron CPU 1005M 1.90GHz, 1 CPU, 2 logical and 2 physical cores
+.NET SDK 7.0.401
+  [Host]     : .NET 7.0.11 (7.0.1123.42427), X64 RyuJIT SSE4.2
+  DefaultJob : .NET 7.0.11 (7.0.1123.42427), X64 RyuJIT SSE4.2
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>Method      </th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen0</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>StringConcatReturn</td><td>247.03 ns</td><td>5.008 ns</td><td>6.150 ns</td><td>0.0992</td><td>104 B</td>
+</tr><tr><td>SpanReturn</td><td>72.41 ns</td><td>0.577 ns</td><td>0.540 ns</td><td>0.0688</td><td>72 B</td>
+</tr></tbody></table>
+</body>
+</html>
