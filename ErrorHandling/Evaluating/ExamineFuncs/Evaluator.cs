@@ -15,7 +15,7 @@ public partial class Evaluator<TSubject>
         if (incompliance.Severity == IncomplianceSeverity.Fatal)
             _operationSeized = true;
 
-        _report.IncomplianceDetected(
+        _report.RegisterFlag(
             reportLink: ref _reportLink,
             flag:       incompliance.Flag,
             severity:   incompliance.Severity);

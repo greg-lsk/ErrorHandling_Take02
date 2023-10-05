@@ -27,7 +27,7 @@ public class Result<T> : IResult
 
         var result = action.Invoke(selector, Value!, arg01);
         if (result.IsValid) return this;
-
+        
         return this;
     }
 

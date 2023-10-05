@@ -17,9 +17,9 @@ internal class EvaluationReport : IdentifiableReport
     internal EvaluationReport() : base() { }
 
 
-    internal void IncomplianceDetected(ref int reportLink, Enum flag, IncomplianceSeverity severity)
+    internal void RegisterFlag(ref int reportLink, Enum flag, IncomplianceSeverity severity)
     {
-        switch (OnIncomplianceDetected(reportLink))
+        switch (OnFlagRegistration(reportLink))
         {
             case OnIncompliance.CreateList:
                 Flags = new() { new(flag, severity) };
@@ -81,7 +81,7 @@ internal class EvaluationReport : IdentifiableReport
         NewFlagCollection,
         IndexedAdd
     }
-    private OnIncompliance OnIncomplianceDetected(int reportLink)
+    private OnIncompliance OnFlagRegistration(int reportLink)
     {
         if (Flags is null) return OnIncompliance.CreateList;
 
@@ -102,7 +102,7 @@ internal class EvaluationReport : IdentifiableReport
     {
         if (_subjectsInfo is null) return OnSubjectInfo.CreateList;
 
-        return reportLink.CompareTo(_subjectsInfo.Count) switch
+        return reportLink.CompareTo(_subjectsInfo.Count - 1) switch
         {
             1 => OnSubjectInfo.NewSubjectInfo,
             _ => OnSubjectInfo.AlreadyRegistered
@@ -118,7 +118,7 @@ internal class EvaluationReport : IdentifiableReport
         string returnString = string.Empty;
         for (int i = 0; i < Flags.Count; ++i)
         {
-            returnString += $"[Subject]:{_subjectsInfo![i]}{Flags[i].LogString()}";
+            returnString += $"[Subject]: {_subjectsInfo![i]}{Flags[i].LogString()}";
         }
 
         return returnString;

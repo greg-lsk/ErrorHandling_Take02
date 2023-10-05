@@ -1,25 +1,27 @@
 ﻿using ErrorHandling.Reporting;
 using ErrorHandling.Reporting.CallStackInfo;
-using System.Runtime.CompilerServices;
 using ErrorHandling.ResultUtilities;
-using Microsoft.Extensions.Logging;
 using ErrorHandling.Reporting.Logging;
+using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
+
+
 
 namespace ErrorHandling.Evaluating;
 
 public readonly partial struct Evaluation
 {
-    private readonly ILogger _logger;
+    private ILogger Logger { get; }
 
     internal EvaluationInfo TraceInfo { get; }
     internal EvaluationReport Report { get; }
 
 
-    internal Evaluation(ILogger logger, string callerFilePath, string callerMemberName, int callerLineNumber)
+    internal Evaluation(ILogger logger, string callerMemberName, int callerLineNumber)
     {
-        _logger = logger;
+        Logger = logger;
         Report = new();
-        TraceInfo = new(callerFilePath, callerMemberName, callerLineNumber);
+        TraceInfo = new(callerMemberName, callerLineNumber);
     }
 
 /*    public static Evaluation Init(
@@ -30,12 +32,11 @@ public readonly partial struct Evaluation
         return new(callerFilePath, callerMemberName, callerLineNumber);
     }*/
     public static Evaluation Init<TCategory>(
-    [CallerFilePath] string callerFilePath = null!,
     [CallerMemberName] string callerMemberName = null!,
     [CallerLineNumber] int callerLineNumber = 0)
     {
         var logger = EvaluationLogger.Get<TCategory>();
-        return new(logger, callerFilePath, callerMemberName, callerLineNumber);
+        return new(logger, callerMemberName, callerLineNumber);
     }
 
 
@@ -75,7 +76,7 @@ public readonly partial struct Evaluation
 
     private VoidResult Void()
     {
-        _logger.Log(
+        Logger.Log(
             LogLevel.Error,
             "{TraceInfo}" +
             "\n      {ReportString}" +
@@ -85,7 +86,7 @@ public readonly partial struct Evaluation
     }
     private Result<TReturn> Result<TReturn>()
     {
-        _logger.Log(
+        Logger.Log(
             LogLevel.Error,
             "{TraceInfo}" +
             "\n      {ReportString}" +

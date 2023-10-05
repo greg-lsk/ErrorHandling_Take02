@@ -1,5 +1,6 @@
 ﻿namespace ErrorHandling.Reporting.CallStackInfo;
 
+
 internal readonly struct FlagInfo
 {
     private readonly Enum _errorFlag;

@@ -3,22 +3,32 @@
 
 namespace ErrorHandling.Reporting.Logging;
 
-public class EvaluationLogger
+internal class EvaluationLogger
 {
     private static ILoggerFactory? _loggerFactory;
-    private readonly static Dictionary<Type, ILogger> _loggers = new();
+    private static readonly Dictionary<Type, ILogger> _loggers = new();
 
 
-    public static void Configure(ILoggerFactory loggerFactory) => _loggerFactory = loggerFactory;
+    internal static void Configure(ILoggerFactory loggerFactory = null!)
+    {
+        if (loggerFactory is not null)
+        {
+            _loggerFactory = loggerFactory;
+            return;
+        }
+
+        _loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+    }
 
 
     internal static ILogger Get<TCategory>()
     {
-        if (_loggers.ContainsKey(typeof(TCategory))) return _loggers[typeof(TCategory)];
+        var key = typeof(TCategory);
 
+        if (_loggers.ContainsKey(key)) return _loggers[key];
 
         var logger = _loggerFactory.CreateLogger<TCategory>();
-        _loggers.Add(typeof(TCategory), logger);
+        _loggers.Add(key, logger);
                 
         return logger;
     }
