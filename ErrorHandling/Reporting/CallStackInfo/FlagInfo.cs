@@ -33,13 +33,15 @@ internal readonly struct FlagInfo
     {
         get
         {
-            var prefix = SeverityView.GetSpan(_severity);
-            var suffix = _errorFlag.ToString().AsSpan();
+            var addition = FlagPrefix.SpanView;
+            var severity = SeverityView.GetSpan(_severity);
+            var flagText = _errorFlag.ToString().AsSpan();
 
-            Span<char> flagInfoBuffer = new char[prefix.Length + suffix.Length]; /*this can be avoided 
-                                                                                   with array-pooling*/
-            prefix.CopyTo(flagInfoBuffer);
-            suffix.CopyTo(flagInfoBuffer[prefix.Length..]);
+            Span<char> flagInfoBuffer = new char[addition.Length + severity.Length + flagText.Length];
+
+            addition.CopyTo(flagInfoBuffer);
+            severity.CopyTo(flagInfoBuffer[addition.Length..]);
+            flagText.CopyTo(flagInfoBuffer[(severity.Length + addition.Length)..]);
 
             return flagInfoBuffer;
         }
@@ -49,14 +51,15 @@ internal readonly struct FlagInfo
     {
         get
         {
-            var prefix = SeverityView.GetMemory(_severity);
-            var suffix = _errorFlag.ToString().AsMemory();
+            var addition = FlagPrefix.MemoryView;
+            var severity = SeverityView.GetMemory(_severity);
+            var flagText = _errorFlag.ToString().AsMemory();
 
-            Memory<char> flagInfoBuffer = new char[prefix.Length + suffix.Length]; /*this can be avoided 
-                                                                                   with array-pooling*/
-            prefix.CopyTo(flagInfoBuffer);
-            suffix.CopyTo(flagInfoBuffer[prefix.Length..]);
+            Memory<char> flagInfoBuffer = new char[addition.Length + severity.Length + flagText.Length];
 
+            addition.CopyTo(flagInfoBuffer);
+            severity.CopyTo(flagInfoBuffer[addition.Length..]);
+            flagText.CopyTo(flagInfoBuffer[(severity.Length + addition.Length)..]);
             return flagInfoBuffer;
         }
     }
@@ -65,9 +68,9 @@ internal readonly struct FlagInfo
 
 internal static class SeverityView
 {
-    private static readonly char[] _alert = new[] { '[', 'a', 'l', 'e', 'r', 't', ']', ':' };
-    private static readonly char[] _error = new[] { '[', 'e', 'r', 'r', 'o', 'r', ']', ':' };
-    private static readonly char[] _fatal = new[] { '[', 'f', 'a', 't', 'a', 'l', ']', ':' };
+    private static readonly char[] _alert = new[] { ' ', '|', '-','[', 'a', 'l', 'e', 'r', 't', ']', ':'  };
+    private static readonly char[] _error = new[] { ' ', '|', '-', '[', 'e', 'r', 'r', 'o', 'r', ']', ':' };
+    private static readonly char[] _fatal = new[] { ' ', '|', '-', '[', 'f', 'a', 't', 'a', 'l', ']', ':' };
 
     internal static ReadOnlySpan<char> GetSpan(IncomplianceSeverity severity) => severity switch 
     {
@@ -82,4 +85,25 @@ internal static class SeverityView
         IncomplianceSeverity.Error => _error.AsMemory(),
         IncomplianceSeverity.Fatal => _fatal.AsMemory()
     };
+}
+
+public static class FlagPrefix
+{
+    public static int loggerProviderIndent;
+    private static char[]? _flagInfoPrefix;
+
+    internal static int Length => loggerProviderIndent + 1;
+
+    public static void Create()
+    {
+        _flagInfoPrefix = new char[loggerProviderIndent + 1];
+
+        _flagInfoPrefix[0] = '\n';
+        for (int i = 1; i < _flagInfoPrefix.Length; ++i)
+            _flagInfoPrefix[i] = ' ';
+
+    }
+
+    internal static ReadOnlySpan<char> SpanView => _flagInfoPrefix.AsSpan();
+    internal static ReadOnlyMemory<char> MemoryView => _flagInfoPrefix.AsMemory();
 }

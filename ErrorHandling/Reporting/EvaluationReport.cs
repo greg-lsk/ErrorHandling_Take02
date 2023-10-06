@@ -118,7 +118,23 @@ internal class EvaluationReport : IdentifiableReport
         string returnString = string.Empty;
         for (int i = 0; i < Flags.Count; ++i)
         {
-            returnString += $"[Subject]: {_subjectsInfo![i]}{Flags[i].LogString()}";
+            returnString += $"[Subject]: {_subjectsInfo![i]}{Flags[i].StringConcat()}";
+        }
+
+        return returnString;
+    }
+
+    internal string StringRep02()
+    {
+        if (Flags is null) return string.Empty;
+
+        string returnString = string.Empty;
+        for (int i = 0; i < Flags.Count; ++i)
+        {
+            if (Flags[i].Count == 1)
+                returnString += $"[Subject]: {_subjectsInfo![i]}{Flags[i].SpanStringReturn()}";
+            else
+                returnString += $"[Subject]: {_subjectsInfo![i]}{Flags[i].MemoryStringReturn()}";
         }
 
         return returnString;

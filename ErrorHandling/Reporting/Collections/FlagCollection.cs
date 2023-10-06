@@ -28,7 +28,7 @@ internal struct FlagCollection
         _reportList = new() { new(flag, severity) };
     }
 
-    internal readonly string LogString()
+    internal readonly string StringConcat()
     {
         var returnValue = "\n      " + _report.ToString();
 
@@ -40,15 +40,95 @@ internal struct FlagCollection
         return returnValue;
     }
 
-    internal readonly string FlagCollectionPart()
+    internal readonly string SpanStringReturn()
     {
-        var returnValue = "\n      " + _report.ErrorFlagPart();
+        Span<char> flagCollectionView = _report.SpanView;
 
-        if (_reportList is null) return returnValue;
+        return flagCollectionView.ToString();        
+    }
 
-        foreach (var flagInfo in _reportList)
-            returnValue += "\n      " + flagInfo.ErrorFlagPart();
+    internal readonly string MemoryStringReturn()
+    {
+        int allocSize;
+        var memoryBuffer = new Memory<char>[Count];
 
-        return returnValue;
+        memoryBuffer[0] = _report.MemoryView;
+        allocSize = memoryBuffer[0].Length;
+
+        for (int i = 0; i < Count - 1; ++i)
+        {
+            memoryBuffer[i + 1] = _reportList[i].MemoryView;
+            allocSize += memoryBuffer[i + 1].Length;
+        }
+
+        Memory<char> final = new char[allocSize];
+        memoryBuffer[0].CopyTo(final);
+        int addNextTo = memoryBuffer[0].Length;
+
+        for (int i=1; i<memoryBuffer.Length; ++i)
+        {
+            memoryBuffer[i].CopyTo(final[addNextTo..]);
+            addNextTo += memoryBuffer[i].Length;
+        }
+
+        return final.ToString();
+    }
+
+    internal readonly Span<char> SpanReturn()
+    {
+        Span<char> flagCollectionView = _report.SpanView;
+
+        return flagCollectionView;
+    }
+
+    internal readonly Memory<char> MemoryReturn()
+    {
+        int allocSize;
+        var memoryBuffer = new Memory<char>[Count];
+        var smth = memoryBuffer.AsSpan();
+
+        memoryBuffer[0] = _report.MemoryView;
+        allocSize = memoryBuffer[0].Length;
+
+        for (int i = 0; i < Count - 1; ++i)
+        {
+            memoryBuffer[i + 1] = _reportList[i].MemoryView;
+            allocSize += memoryBuffer[i + 1].Length;
+        }
+
+        Memory<char> final = new char[allocSize];
+        memoryBuffer[0].CopyTo(final);
+        int addNextTo = memoryBuffer[0].Length;
+
+        for (int i = 1; i < memoryBuffer.Length; ++i)
+        {
+            memoryBuffer[i].CopyTo(final[addNextTo..]);
+            addNextTo += memoryBuffer[i].Length;
+        }
+
+        return final;
+    }
+
+    internal readonly Memory<char>[] MemoryArrayReturn()
+    {
+        var memoryBuffer = new Memory<char>[Count];
+        
+        memoryBuffer[0] = _report.MemoryView;
+        
+        for (int i = 0; i < Count - 1; ++i)
+            memoryBuffer[i + 1] = _reportList[i].MemoryView;
+
+        return memoryBuffer;
+    }
+    internal readonly Span<Memory<char>> MemorySpanReturn()
+    {
+        var memoryBuffer = new Memory<char>[Count];
+
+        memoryBuffer[0] = _report.MemoryView;
+
+        for (int i = 0; i < Count - 1; ++i)
+            memoryBuffer[i + 1] = _reportList[i].MemoryView;
+
+        return memoryBuffer.AsSpan();
     }
 }

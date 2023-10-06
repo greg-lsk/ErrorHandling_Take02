@@ -2,6 +2,7 @@
 
 using ErrorHandling.Benchmark.Utilities;
 using ErrorHandling.Reporting.Collections;
+using System;
 
 namespace ErrorHandling.Benchmark.LogMessageBuilding;
 
@@ -22,15 +23,24 @@ public class FlagCollectionBuilding
             flagCollection.Add(Mock.FlagPlaceholder, IncomplianceSeverity.Error);
     }
 
+    [Benchmark(Baseline = true)]
+    public string StringConcat() => flagCollection.StringConcat();
+    
     [Benchmark]
-    public string StringReturn()
-    {
-        return flagCollection.LogString();
-    }
+    public string SpanStringReturn() => flagCollection.SpanStringReturn();
 
     [Benchmark]
-    public string SpanReturn()
-    {
-        return flagCollection.FlagCollectionPart();
-    }
+    public Span<char> SpanReturn() => flagCollection.SpanReturn();
+
+    [Benchmark]
+    public string MemoryStringReturn() => flagCollection.MemoryStringReturn();
+    
+    [Benchmark]
+    public Memory<char> MemoryReturn() => flagCollection.MemoryReturn();
+
+    [Benchmark]
+    public Memory<char>[] MemoryArrayReturn() => flagCollection.MemoryArrayReturn();
+
+    [Benchmark]
+    public Span<Memory<char>> MemorySpanReturn() => flagCollection.MemorySpanReturn();
 }
