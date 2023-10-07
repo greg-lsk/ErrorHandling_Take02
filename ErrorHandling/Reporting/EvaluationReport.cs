@@ -110,21 +110,6 @@ internal class EvaluationReport : IdentifiableReport
         };
     }
 
-
-
-    internal string StringRep()
-    {
-        if (Flags is null) return string.Empty;
-
-        string returnString = string.Empty;
-        for (int i = 0; i < Flags.Count; ++i)
-        {
-            returnString += $"[Subject]: {_subjectsInfo![i]}{Flags[i].StringConcat()}";
-        }
-
-        return returnString;
-    }
-
     public override string ToString()
     {
         if (Flags is null) return string.Empty;
