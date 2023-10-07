@@ -10,6 +10,7 @@ internal struct FlagCollection
 
     internal readonly int Count => _reportList is null ? 1 : _reportList.Count + 1;
 
+    internal readonly FlagInfo this[int index] => index == 0 ? _report : _reportList[index - 1];
 
     internal FlagCollection(Enum flag, IncomplianceSeverity severity)
     {
@@ -122,7 +123,7 @@ internal struct FlagCollection
     }
     internal readonly Span<Memory<char>> MemorySpanReturn()
     {
-        var memoryBuffer = new Memory<char>[Count];
+        var memoryBuffer = new Memory<char>[Count]; //array pooling???
 
         memoryBuffer[0] = _report.MemoryView;
 

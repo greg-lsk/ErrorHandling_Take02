@@ -16,28 +16,15 @@ internal readonly struct FlagInfo
 
     public override readonly string ToString() => $" |-[{_severity}]: {_errorFlag}";
 
-    internal readonly string ErrorFlagPart()
-    {
-        var prefix = SeverityView.GetSpan(_severity);
-        var suffix = _errorFlag.ToString().AsSpan();
-
-        Span<char> flagInfoBuffer = new char[prefix.Length + suffix.Length];
-
-        prefix.CopyTo(flagInfoBuffer);
-        suffix.CopyTo(flagInfoBuffer[prefix.Length..]);
-
-        return flagInfoBuffer.ToString();
-    }
-
     internal readonly Span<char> SpanView
     {
         get
         {
             var addition = FlagPrefix.SpanView;
             var severity = SeverityView.GetSpan(_severity);
-            var flagText = _errorFlag.ToString().AsSpan();
+            var flagText = _errorFlag.ToString().AsSpan();//alloc
 
-            Span<char> flagInfoBuffer = new char[addition.Length + severity.Length + flagText.Length];
+            Span<char> flagInfoBuffer = new char[addition.Length + severity.Length + flagText.Length];//array pooling?
 
             addition.CopyTo(flagInfoBuffer);
             severity.CopyTo(flagInfoBuffer[addition.Length..]);
@@ -53,9 +40,9 @@ internal readonly struct FlagInfo
         {
             var addition = FlagPrefix.MemoryView;
             var severity = SeverityView.GetMemory(_severity);
-            var flagText = _errorFlag.ToString().AsMemory();
+            var flagText = _errorFlag.ToString().AsMemory();//alloc
 
-            Memory<char> flagInfoBuffer = new char[addition.Length + severity.Length + flagText.Length];
+            Memory<char> flagInfoBuffer = new char[addition.Length + severity.Length + flagText.Length]; //array pooling?
 
             addition.CopyTo(flagInfoBuffer);
             severity.CopyTo(flagInfoBuffer[addition.Length..]);
@@ -68,7 +55,7 @@ internal readonly struct FlagInfo
 
 internal static class SeverityView
 {
-    private static readonly char[] _alert = new[] { ' ', '|', '-','[', 'a', 'l', 'e', 'r', 't', ']', ':'  };
+    private static readonly char[] _alert = new[] { ' ', '|', '-', '[', 'a', 'l', 'e', 'r', 't', ']', ':'  };
     private static readonly char[] _error = new[] { ' ', '|', '-', '[', 'e', 'r', 'r', 'o', 'r', ']', ':' };
     private static readonly char[] _fatal = new[] { ' ', '|', '-', '[', 'f', 'a', 't', 'a', 'l', ']', ':' };
 

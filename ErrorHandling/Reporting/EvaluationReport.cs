@@ -1,5 +1,5 @@
 ﻿using ErrorHandling.Reporting.Abstract;
-
+using ErrorHandling.Reporting.Collections;
 
 namespace ErrorHandling.Reporting;
 
@@ -71,7 +71,7 @@ internal class EvaluationReport : IdentifiableReport
         externalReports = new() { report.ReportId };
     }
 
-    internal bool EvaluationYieldedErrors(int reportLink) 
+    internal bool EvaluationYieldedErrors(int reportLink)
         => Flags is not null && reportLink <= Flags.Count;
 
 
@@ -88,10 +88,10 @@ internal class EvaluationReport : IdentifiableReport
         return reportLink.CompareTo(Flags.Count - 1) switch
         {
             1 => OnIncompliance.NewFlagCollection,
-            _ => OnIncompliance.IndexedAdd 
+            _ => OnIncompliance.IndexedAdd
         };
     }
-    
+
     private enum OnSubjectInfo
     {
         CreateList,
@@ -106,7 +106,7 @@ internal class EvaluationReport : IdentifiableReport
         {
             1 => OnSubjectInfo.NewSubjectInfo,
             _ => OnSubjectInfo.AlreadyRegistered
-        };  
+        };
     }
 
 
@@ -124,19 +124,57 @@ internal class EvaluationReport : IdentifiableReport
         return returnString;
     }
 
-    internal string StringRep02()
+    internal string SpanReturnFromCollection()
     {
         if (Flags is null) return string.Empty;
 
-        string returnString = string.Empty;
+        var flagsCounter = 0;
+        var charsToAlloc = 0;
         for (int i = 0; i < Flags.Count; ++i)
         {
-            if (Flags[i].Count == 1)
-                returnString += $"[Subject]: {_subjectsInfo![i]}{Flags[i].SpanStringReturn()}";
-            else
-                returnString += $"[Subject]: {_subjectsInfo![i]}{Flags[i].MemoryStringReturn()}";
+            flagsCounter += Flags[i].Count;
+            charsToAlloc += SubjectPrefix.Length + _subjectsInfo![i].Length;
         }
 
-        return returnString;
+
+        var index = 0;
+        var flagViews = new ReadOnlyMemory<char>[flagsCounter]; //alloc
+        for (int i = 0; i < Flags.Count; ++i)
+        {
+            for (int j = 0; j < Flags[i].Count; ++j)
+            {
+                flagViews[index] = Flags[i][j].MemoryView;
+                charsToAlloc += flagViews[index++].Length;
+            }
+        }
+
+        index = 0;
+        var messageIndex = 0;
+        Span<char> reportMessage = new char[charsToAlloc]; //alloc
+        for (int i = 0; i < Flags.Count; ++i)
+        {
+            SubjectPrefix.SpanView.CopyTo(reportMessage);
+            messageIndex += SubjectPrefix.Length;
+
+            _subjectsInfo![i].AsSpan().CopyTo(reportMessage[messageIndex..]);
+            messageIndex += _subjectsInfo![i].Length;
+
+            for (int j = 0; j < Flags[i].Count; ++j)
+            {
+                flagViews[index].Span.CopyTo(reportMessage[messageIndex..]);
+                messageIndex += flagViews[index++].Length;
+            }
+        }
+
+        return reportMessage.ToString(); //alloc
     }
+}
+
+internal static class SubjectPrefix
+{
+    private static readonly char[] _prefix = { '[', 'S', 'u', 'b', 'j', 'e', 'c', 't', ']', ':' , ' '};
+
+    internal static int Length => _prefix.Length;
+    internal static ReadOnlySpan<char> SpanView => _prefix.AsSpan();
+    internal static ReadOnlyMemory<char> MemoryView => _prefix.AsMemory();
 }
