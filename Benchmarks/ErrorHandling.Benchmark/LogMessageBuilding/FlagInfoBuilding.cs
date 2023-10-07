@@ -8,6 +8,9 @@ using ErrorHandling.Reporting.CallStackInfo;
 namespace ErrorHandling.Benchmark.LogMessageBuilding;
 
 [MemoryDiagnoser]
+/// <summary>
+/// Notice: To run the benchmark, please switch to "optimize-error-message-construction" branch 
+/// </summary>
 public class FlagInfoBuilding
 {
     FlagInfo flagInfo = new(Mock.FlagPlaceholder, IncomplianceSeverity.Error);
