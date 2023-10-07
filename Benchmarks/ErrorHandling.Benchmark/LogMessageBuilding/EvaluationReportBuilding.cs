@@ -35,5 +35,5 @@ public class EvaluationReportBuilding
     public string StringConcat() => Report.StringRep();
 
     [Benchmark]
-    public string StringFromSpan() => Report.SpanReturnFromCollection();
+    public string StringFromSpan() => Report.ToString();
 }

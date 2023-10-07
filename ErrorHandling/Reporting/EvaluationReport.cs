@@ -1,5 +1,6 @@
 ﻿using ErrorHandling.Reporting.Abstract;
-using ErrorHandling.Reporting.Collections;
+using ErrorHandling.Reporting.Formatting;
+
 
 namespace ErrorHandling.Reporting;
 
@@ -124,7 +125,7 @@ internal class EvaluationReport : IdentifiableReport
         return returnString;
     }
 
-    internal string SpanReturnFromCollection()
+    public override string ToString()
     {
         if (Flags is null) return string.Empty;
 
@@ -148,6 +149,7 @@ internal class EvaluationReport : IdentifiableReport
             }
         }
 
+
         index = 0;
         var messageIndex = 0;
         Span<char> reportMessage = new char[charsToAlloc]; //alloc
@@ -168,13 +170,4 @@ internal class EvaluationReport : IdentifiableReport
 
         return reportMessage.ToString(); //alloc
     }
-}
-
-internal static class SubjectPrefix
-{
-    private static readonly char[] _prefix = { '[', 'S', 'u', 'b', 'j', 'e', 'c', 't', ']', ':' , ' '};
-
-    internal static int Length => _prefix.Length;
-    internal static ReadOnlySpan<char> SpanView => _prefix.AsSpan();
-    internal static ReadOnlyMemory<char> MemoryView => _prefix.AsMemory();
 }

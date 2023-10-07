@@ -80,7 +80,7 @@ public readonly partial struct Evaluation
             LogLevel.Error,
             "{TraceInfo}" +
             "\n      {ReportString}" +
-            "\n      [EvaluationID]:{ReportID}", TraceInfo, Report.SpanReturnFromCollection(), Report.ReportId);
+            "\n      [EvaluationID]:{ReportID}", TraceInfo, Report.ToString(), Report.ReportId);
 
         return new(new ResultReport(Report.ReportId, Report.Flags!));
     }
@@ -90,7 +90,7 @@ public readonly partial struct Evaluation
             LogLevel.Error,
             "{TraceInfo}" +
             "\n      {ReportString}" +
-            "\n      [EvaluationID]:{ReportID}", TraceInfo, Report.SpanReturnFromCollection(), Report.ReportId);
+            "\n      [EvaluationID]:{ReportID}", TraceInfo, Report.ToString(), Report.ReportId);
 
         return new(new ResultReport(Report.ReportId, Report.Flags!));
     }
