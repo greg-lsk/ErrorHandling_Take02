@@ -4,7 +4,12 @@ using ErrorHandling.Reporting;
 
 namespace ErrorHandling.Benchmark.LogMessageBuilding;
 
+
+
 [MemoryDiagnoser]
+/// <summary>
+/// Notice: To run the benchmark, please switch to "optimize-error-message-construction" branch 
+/// </summary>
 public class EvaluationReportBuilding
 {
     EvaluationReport Report = new();
