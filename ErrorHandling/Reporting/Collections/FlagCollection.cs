@@ -28,4 +28,16 @@ internal struct FlagCollection
 
         _reportList = new() { new(flag, severity) };
     }
+
+    internal readonly string StringConcat()
+    {
+        var returnValue = "\n      " + _report.ToString();
+
+        if (_reportList is null) return returnValue;
+
+        foreach(var flagInfo in _reportList)
+            returnValue += "\n      " + flagInfo.ToString();
+        
+        return returnValue;
+    }
 }

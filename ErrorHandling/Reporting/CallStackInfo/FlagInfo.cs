@@ -15,6 +15,9 @@ internal readonly struct FlagInfo
         _severity = severity;
     }
 
+
+    public override readonly string ToString() => $" |-[{_severity}]: {_errorFlag}";
+
     internal readonly Span<char> SpanView
     {
         get
