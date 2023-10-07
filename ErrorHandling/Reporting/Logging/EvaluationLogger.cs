@@ -1,22 +1,28 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ErrorHandling.Reporting.Formatting;
+using Microsoft.Extensions.Logging;
 
 
 namespace ErrorHandling.Reporting.Logging;
 
-internal class EvaluationLogger
+internal static class EvaluationLogger
 {
     private static ILoggerFactory? _loggerFactory;
     private static readonly Dictionary<Type, ILogger> _loggers = new();
 
+    internal static int ProviderIndent { get; private set; }
 
-    internal static void Configure(ILoggerFactory loggerFactory = null!)
+
+    internal static void Configure(LogConfig? config)
     {
-        if (loggerFactory is not null)
+        if (config is not null)
         {
-            _loggerFactory = loggerFactory;
+            (_loggerFactory, ProviderIndent) = config();
+            FlagPrefix.Create();
             return;
         }
 
+        ProviderIndent = 6;
+        FlagPrefix.Create();
         _loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
     }
 

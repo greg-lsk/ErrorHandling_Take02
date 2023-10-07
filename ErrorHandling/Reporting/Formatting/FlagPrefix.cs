@@ -1,15 +1,17 @@
-﻿namespace ErrorHandling.Reporting.Formatting;
+﻿using ErrorHandling.Reporting.Logging;
 
-public static class FlagPrefix
+
+namespace ErrorHandling.Reporting.Formatting;
+
+internal static class FlagPrefix
 {
-    public static int loggerProviderIndent;
     private static char[]? _flagInfoPrefix;
 
-    internal static int Length => loggerProviderIndent + 1;
+    internal static int Length => EvaluationLogger.ProviderIndent + 1;
 
-    public static void Create()
+    internal static void Create()
     {
-        _flagInfoPrefix = new char[loggerProviderIndent + 1];
+        _flagInfoPrefix = new char[EvaluationLogger.ProviderIndent + 1];
 
         _flagInfoPrefix[0] = '\n';
         for (int i = 1; i < _flagInfoPrefix.Length; ++i)

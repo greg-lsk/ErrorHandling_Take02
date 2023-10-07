@@ -1,17 +1,16 @@
-﻿using ConsoleApp.Entities;
+﻿using Microsoft.Extensions.Logging;
+
+using ConsoleApp.Entities;
 using ConsoleApp.ValueTypes;
 using ErrorHandling;
-using ErrorHandling.Reporting.CallStackInfo;
-using Microsoft.Extensions.Logging;
+using ErrorHandling.Reporting.Formatting;
 
 
+EvaluationConfig evaluationConfig = new();
 
 using (var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole()))
 {
-    EvaluationConfig.Logging(() => loggerFactory);
-
-    FlagPrefix.loggerProviderIndent = 6;
-    FlagPrefix.Create();
+    evaluationConfig.Logging(() => (loggerFactory, 6));
 
     var person = Person.Create("Gre", "Allm");
 

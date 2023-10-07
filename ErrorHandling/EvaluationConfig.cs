@@ -4,19 +4,13 @@ using Microsoft.Extensions.Logging;
 
 namespace ErrorHandling;
 
-public delegate ILoggerFactory LogForwarding();
+public delegate (ILoggerFactory providerForwarder, int providerIndent) LogConfig();
+
 public class EvaluationConfig
 {
-    public static void Logging(LogForwarding logForwardingDelegate = null!)
-    {
-        if(logForwardingDelegate is not null) 
-        {
-            EvaluationLogger.Configure(logForwardingDelegate.Invoke());
-            return;
-        }
-
-        EvaluationLogger.Configure();
+    public EvaluationConfig Logging(LogConfig logConfig = null!)
+    { 
+        EvaluationLogger.Configure(logConfig);
+        return this;
     }
-        
-
 }
