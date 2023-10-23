@@ -2,7 +2,7 @@
 
 namespace ConsoleApp.ValueTypes;
 
-public enum CreateNameFlags
+public enum InvalidNameFlags
 {
     NameStringValueIsEmpty,
     NameStringValueMaxLengthExceeded,
@@ -14,21 +14,21 @@ public partial class Incompliance
     public static readonly IncomplianceRecord<string> NameIsEmpty = new
     (
         IncomplianceDelegate.StringIsEmpty,
-        CreateNameFlags.NameStringValueIsEmpty,
+        InvalidNameFlags.NameStringValueIsEmpty,
         IncomplianceSeverity.Fatal
     );
 
     public static readonly IncomplianceRecord<string> NameStartsWithLowerCase = new
     (
         IncomplianceDelegate.StringStartsWithLowerCase,
-        CreateNameFlags.NameStringValueStartsWithLowerCaseChar,
+        InvalidNameFlags.NameStringValueStartsWithLowerCaseChar,
         IncomplianceSeverity.Error
     );
 
     public static readonly IncomplianceRecord<string, int> NameExceedsLength = new
     (
         IncomplianceDelegate.StringExceedsLength,
-        CreateNameFlags.NameStringValueMaxLengthExceeded,
+        InvalidNameFlags.NameStringValueMaxLengthExceeded,
         IncomplianceSeverity.Error
     );
 }

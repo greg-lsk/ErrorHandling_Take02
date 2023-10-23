@@ -2,7 +2,9 @@
 using ErrorHandling.Evaluating;
 using ErrorHandling.ResultUtilities;
 
+
 namespace ConsoleApp.Entities;
+
 public class Person
 {
     private Name _firstName;
@@ -33,12 +35,8 @@ public class Person
     {
         var evaluation = Evaluation.Init<Person>();
 
-        /*This is stupid:
-            -structs and Results are created even if the strings provided are invalid
-            -must find a way to group examinations together and reuse them*/
         var firstNameR = Name.Create(firstName);
         var lastNameR = Name.Create(lastName);
-        /*This is stupid*/
 
         evaluation.Evaluate(firstNameR, lastNameR);
 

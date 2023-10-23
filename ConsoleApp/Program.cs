@@ -3,7 +3,6 @@
 using ConsoleApp.Entities;
 using ConsoleApp.ValueTypes;
 using ErrorHandling;
-using ErrorHandling.Reporting.Formatting;
 
 
 EvaluationConfig evaluationConfig = new();
@@ -12,7 +11,7 @@ using (var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole())
 {
     evaluationConfig.Logging(() => (loggerFactory, 6));
 
-    var person = Person.Create("Gre", "Allm");
+    var person = Person.Create("Greg", "Allm");
 
     person.ActUpon(p => ref p.FirstName, Name.Change, "Gregg")
           .ActUpon(p => ref p.LastName, Name.Change, "allman")
