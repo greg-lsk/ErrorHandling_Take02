@@ -20,6 +20,12 @@ public class Person
         _lastName = lastName;
     }
 
+    internal Person(string firstName, string lastName)
+    {
+        _firstName = new(firstName);
+        _lastName = new(lastName);
+    }
+
 
     public static Result<Person> Create(Result<Name> firstName,
                                         Result<Name> lastName)
@@ -34,14 +40,13 @@ public class Person
     public static Result<Person> Create(string firstName, string lastName)
     {
         var evaluation = Evaluation.Init<Person>();
-
-        var firstNameR = Name.Create(firstName);
-        var lastNameR = Name.Create(lastName);
-
-        evaluation.Evaluate(firstNameR, lastNameR);
-
-        return evaluation.YieldResult(firstNameR.Value,
-                                      lastNameR.Value,
+        evaluation.Evaluate(firstName)
+                  .CaptureAll(EvaluationChain.InvalidName)
+                  .Evaluate(lastName)
+                  .CaptureAll(EvaluationChain.InvalidName);
+        
+        return evaluation.YieldResult(firstName,
+                                      lastName,
                                       (fn, ln) => new Person(fn, ln));
     }
 

@@ -91,6 +91,13 @@ public partial class Evaluator<TSubject>
         return this;
     }
 
+    public Evaluator<TSubject> CaptureAll(Action<Evaluator<TSubject>> evaluationAction)
+    {
+        _attachingBehaviour = AttachingBehaviour.Accumulative;
+        evaluationAction.Invoke(this);
+        return this;
+    }
+
     private void NullDetected()
     {
         _operationSeized = true;

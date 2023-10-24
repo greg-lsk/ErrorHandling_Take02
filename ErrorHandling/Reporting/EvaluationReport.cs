@@ -140,7 +140,7 @@ internal class EvaluationReport : IdentifiableReport
         Span<char> reportMessage = new char[charsToAlloc]; //alloc
         for (int i = 0; i < Flags.Count; ++i)
         {
-            SubjectPrefix.SpanView.CopyTo(reportMessage);
+            SubjectPrefix.SpanView.CopyTo(reportMessage[messageIndex..]);
             messageIndex += SubjectPrefix.Length;
 
             _subjectsInfo![i].AsSpan().CopyTo(reportMessage[messageIndex..]);

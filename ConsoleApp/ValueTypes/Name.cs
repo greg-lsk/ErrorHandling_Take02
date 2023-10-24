@@ -18,10 +18,7 @@ public readonly struct Name
         var evaluation = Evaluation.Init<Name>();
 
         evaluation.Evaluate(stringValue)
-                  .CaptureAll()
-                    .Examine(in Incompliance.NameIsEmpty)
-                    .Examine(in Incompliance.NameStartsWithLowerCase)
-                    .Examine(in Incompliance.NameExceedsLength, MaxLength);
+                  .CaptureAll(EvaluationChain.InvalidName);
 
         return evaluation.YieldResult(stringValue, (sv) => new Name(sv));
     }
@@ -33,10 +30,7 @@ public readonly struct Name
         var evaluation = Evaluation.Init<Name>();
 
         evaluation.Evaluate(stringValue)
-                  .CaptureAll()
-                    .Examine(in Incompliance.NameIsEmpty)
-                    .Examine(in Incompliance.NameStartsWithLowerCase)
-                    .Examine(in Incompliance.NameExceedsLength, MaxLength);
+                  .CaptureAll(EvaluationChain.InvalidName);
 
         return evaluation.YieldVoid(selector,
                                     selectedFrom,

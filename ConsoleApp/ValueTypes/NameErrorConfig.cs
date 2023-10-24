@@ -1,4 +1,6 @@
 ﻿using ErrorHandling;
+using ErrorHandling.Evaluating;
+
 
 namespace ConsoleApp.ValueTypes;
 
@@ -31,4 +33,12 @@ public partial class Incompliance
         InvalidNameFlags.NameStringValueMaxLengthExceeded,
         IncomplianceSeverity.Error
     );
+}
+
+public static partial class EvaluationChain
+{
+    public static void InvalidName(Evaluator<string> evaluator) => 
+        evaluator.Examine(in Incompliance.NameIsEmpty)
+                 .Examine(in Incompliance.NameStartsWithLowerCase)
+                 .Examine(in Incompliance.NameExceedsLength, Name.MaxLength);
 }
