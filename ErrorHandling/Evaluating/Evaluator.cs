@@ -30,19 +30,14 @@ public partial class Evaluator<TSubject>
                                         AttachingBehaviour evaluationBehaviour)
     {
         ResetState();
-        _attachingBehaviour = evaluationBehaviour;
+
+        _subject = subject;
         _reportLink = _report.NextLink;
-
-        if (subject is null)
-        {
-            NullDetected();
-        }
-        else
-        {
-            _subject = subject;
-            evaluateAgainst.Invoke(this);
-        }
-
+        _attachingBehaviour = evaluationBehaviour;
+        
+        if (subject is null) NullDetected();
+        else evaluateAgainst.Invoke(this);
+        
         return this;
     }
 
@@ -67,14 +62,7 @@ public partial class Evaluator<TSubject>
         if (incompliance.Severity == IncomplianceSeverity.Fatal) 
             _operationSeized = true;
 
-        _report.RegisterFlag(
-            reportLink: ref _reportLink,
-            flag:       incompliance.Flag,
-            severity:   incompliance.Severity);
-
-        _report.TryRegisterSubjectInfo(
-            reportLink:  ref _reportLink, 
-            subjectInfo: $"{_subject}");
+        UpdateReport(incompliance.Flag, incompliance.Severity);
 
         return this;
     }
@@ -83,19 +71,17 @@ public partial class Evaluator<TSubject>
     private void NullDetected()
     {
         _operationSeized = true;
-
-        _report.RegisterFlag(
-            reportLink: ref _reportLink,
-            flag:       UniversalFlags.NullDetected,
-            severity:   IncomplianceSeverity.Fatal);
-
-        _report.TryRegisterSubjectInfo(
-            reportLink: ref _reportLink,
-            subjectInfo: "null");
+        UpdateReport(UniversalFlags.NullDetected, IncomplianceSeverity.Fatal);
     }
 
     private void ResetState()
     { 
         _operationSeized = false;
+    }
+
+    private void UpdateReport(Enum incomplianceFlag, IncomplianceSeverity severity)
+    {
+        _report.RegisterFlag(ref _reportLink, incomplianceFlag, severity);
+        _report.TryRegisterSubjectInfo(ref _reportLink, _subject is not null ? $"{_subject}" : "null");
     }
 }
