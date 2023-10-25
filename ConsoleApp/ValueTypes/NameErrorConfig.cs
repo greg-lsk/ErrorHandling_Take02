@@ -35,7 +35,7 @@ public partial class Incompliance
     );
 }
 
-public static partial class EvaluationChain
+public static partial class IncomplianceChain
 {
     public static void InvalidName(Evaluator<string> evaluator) => 
         evaluator.Examine(in Incompliance.NameIsEmpty)

@@ -24,25 +24,31 @@ public readonly partial struct Evaluation
         TraceInfo = new(callerMemberName, callerLineNumber);
     }
 
-/*    public static Evaluation Init(
-        [CallerFilePath] string callerFilePath = null!,
+
+    public static Evaluation Init<TCategory>(
         [CallerMemberName] string callerMemberName = null!,
         [CallerLineNumber] int callerLineNumber = 0)
-    {
-        return new(callerFilePath, callerMemberName, callerLineNumber);
-    }*/
-    public static Evaluation Init<TCategory>(
-    [CallerMemberName] string callerMemberName = null!,
-    [CallerLineNumber] int callerLineNumber = 0)
     {
         var logger = EvaluationLogger.Get<TCategory>();
         return new(logger, callerMemberName, callerLineNumber);
     }
 
-
-    public Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject)
+    public Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject,
+                                                  Action<Evaluator<TSubject>> evaluateAgainst,
+                                                  AttachingBehaviour evaluationBehaviour)
     {
-        return new(subject, Report);
+        var evaluator = new Evaluator<TSubject>(Report);
+
+        return evaluator.Evaluate(subject, evaluateAgainst, evaluationBehaviour);
+    }
+
+    public Evaluator<TSubject> Evaluate<TSubject>(Action<Evaluator<TSubject>> evaluateAgainst,
+                                                  AttachingBehaviour evaluationBehaviour,
+                                                  params TSubject?[] subjects)
+    {
+        var evaluator = new Evaluator<TSubject>(Report);
+
+        return evaluator.Evaluate(evaluateAgainst, evaluationBehaviour, subjects);
     }
 
     public void Evaluate(IResult result)
@@ -79,7 +85,7 @@ public readonly partial struct Evaluation
         Logger.Log(
             LogLevel.Error,
             "{TraceInfo}" +
-            "\n      {ReportString}" +
+            "      {ReportString}" +
             "\n      [EvaluationID]:{ReportID}", TraceInfo, Report.ToString(), Report.ReportId);
 
         return new(new ResultReport(Report.ReportId, Report.Flags!));
@@ -89,7 +95,7 @@ public readonly partial struct Evaluation
         Logger.Log(
             LogLevel.Error,
             "{TraceInfo}" +
-            "\n      {ReportString}" +
+            "      {ReportString}" +
             "\n      [EvaluationID]:{ReportID}", TraceInfo, Report.ToString(), Report.ReportId);
 
         return new(new ResultReport(Report.ReportId, Report.Flags!));

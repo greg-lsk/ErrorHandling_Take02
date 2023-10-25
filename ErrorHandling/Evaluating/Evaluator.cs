@@ -18,42 +18,42 @@ public partial class Evaluator<TSubject>
                                      && ErrorsOccured;
 
 
-    internal Evaluator(TSubject? subject,
-                       EvaluationReport report)
+    internal Evaluator(EvaluationReport report)
     {
-        _attachingBehaviour = AttachingBehaviour.OnErrorStop;
-
         _report = report;
-        _reportLink = _report.NextLink;
-
-        if (subject is null)
-        {
-            NullDetected();
-            return;
-        }
-
-        _subject = subject;
+        _attachingBehaviour = AttachingBehaviour.OnErrorStop;
     }
 
 
-    public Evaluator<TSubject> Evaluate(TSubject? subject)
+    public Evaluator<TSubject> Evaluate(TSubject? subject,
+                                        Action<Evaluator<TSubject>> evaluateAgainst,
+                                        AttachingBehaviour evaluationBehaviour)
     {
         ResetState();
+        _attachingBehaviour = evaluationBehaviour;
         _reportLink = _report.NextLink;
 
         if (subject is null)
         {
             NullDetected();
-            return this;
+        }
+        else
+        {
+            _subject = subject;
+            evaluateAgainst.Invoke(this);
         }
 
-        _subject = subject;
         return this;
     }
 
-    public Evaluator<TNewSubject> Evaluate<TNewSubject>(TNewSubject? subject)
+    public Evaluator<TSubject> Evaluate(Action<Evaluator<TSubject>> evaluateAgainst,
+                                        AttachingBehaviour evaluationBehaviour,
+                                        params TSubject?[] subjects)
     {
-        return new(subject, _report);
+        for(int i=0; i<subjects.Length; ++i)
+            Evaluate(subjects[i], evaluateAgainst, evaluationBehaviour);
+        
+        return this;
     }
 
     public Evaluator<TSubject> Examine(in IncomplianceRecord<TSubject> incompliance)
@@ -79,24 +79,6 @@ public partial class Evaluator<TSubject>
         return this;
     }
 
-    public Evaluator<TSubject> CaptureFirst()
-    {
-        _attachingBehaviour = AttachingBehaviour.OnErrorStop;
-        return this;
-    }
-
-    public Evaluator<TSubject> CaptureAll()
-    {
-        _attachingBehaviour = AttachingBehaviour.Accumulative;
-        return this;
-    }
-
-    public Evaluator<TSubject> CaptureAll(Action<Evaluator<TSubject>> evaluationAction)
-    {
-        _attachingBehaviour = AttachingBehaviour.Accumulative;
-        evaluationAction.Invoke(this);
-        return this;
-    }
 
     private void NullDetected()
     {
@@ -111,9 +93,9 @@ public partial class Evaluator<TSubject>
             reportLink: ref _reportLink,
             subjectInfo: "null");
     }
+
     private void ResetState()
     { 
         _operationSeized = false;
-        _attachingBehaviour = AttachingBehaviour.OnErrorStop;
     }
 }

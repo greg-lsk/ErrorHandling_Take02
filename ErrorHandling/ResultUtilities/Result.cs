@@ -44,6 +44,16 @@ public class Result<T> : IResult
         return this;
     }
 
+    public Result<T> ActUpon<T1, T2>(Func<T1, T2, IResult> func, T1 arg01, T2 arg02)
+    {
+        if(!IsValid) return this;
+
+        var result = func.Invoke(arg01, arg02);
+        if (result.IsValid) return this;
+
+        return this;
+    }
+
     public Result<T> ActUpon(Action<T> action)
     {
         if (!IsValid) return this;

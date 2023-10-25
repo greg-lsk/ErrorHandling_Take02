@@ -11,30 +11,4 @@ public readonly struct Name
 
 
     internal Name(string stringValue) => StringValue = stringValue;
-
-
-    public static Result<Name> Create(string stringValue)
-    {
-        var evaluation = Evaluation.Init<Name>();
-
-        evaluation.Evaluate(stringValue)
-                  .CaptureAll(EvaluationChain.InvalidName);
-
-        return evaluation.YieldResult(stringValue, (sv) => new Name(sv));
-    }
-
-    public static VoidResult Change<TSelectedFrom>(StructSelector<TSelectedFrom, Name> selector,
-                                                   TSelectedFrom selectedFrom, 
-                                                   string stringValue)
-    {
-        var evaluation = Evaluation.Init<Name>();
-
-        evaluation.Evaluate(stringValue)
-                  .CaptureAll(EvaluationChain.InvalidName);
-
-        return evaluation.YieldVoid(selector,
-                                    selectedFrom,
-                                    stringValue,
-                                    (s, sf, sv) => s.Invoke(sf) = new Name(sv));
-    }
 }
