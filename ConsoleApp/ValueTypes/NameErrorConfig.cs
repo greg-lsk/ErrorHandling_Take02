@@ -1,5 +1,6 @@
 ﻿using ErrorHandling;
 using ErrorHandling.Evaluating;
+using ErrorHandling.Predicates;
 
 
 namespace ConsoleApp.ValueTypes;
@@ -15,21 +16,21 @@ public partial class Incompliance
 {
     public static readonly IncomplianceRecord<string> NameIsEmpty = new
     (
-        IncomplianceDelegate.StringIsEmpty,
+        StringPredicates.IsEmpty,
         InvalidNameFlags.NameStringValueIsEmpty,
         IncomplianceSeverity.Fatal
     );
 
     public static readonly IncomplianceRecord<string> NameStartsWithLowerCase = new
     (
-        IncomplianceDelegate.StringStartsWithLowerCase,
+        StringPredicates.StartsWithLowerCase,
         InvalidNameFlags.NameStringValueStartsWithLowerCaseChar,
         IncomplianceSeverity.Error
     );
 
     public static readonly IncomplianceRecord<string, int> NameExceedsLength = new
     (
-        IncomplianceDelegate.StringExceedsLength,
+        StringPredicates.ExceedsLength,
         InvalidNameFlags.NameStringValueMaxLengthExceeded,
         IncomplianceSeverity.Error
     );
