@@ -4,11 +4,11 @@ using ErrorHandling.Predicates;
 
 namespace ConsoleApp.ValueTypes;
 
-public enum InvalidNameFlags
+public enum InvalidNameTags
 {
-    NameStringValueIsEmpty,
-    NameStringValueMaxLengthExceeded,
-    NameStringValueStartsWithLowerCaseChar
+    IsEmpty,
+    LengthExceeded,
+    StartsWithLowerCaseChar
 }
 
 public partial class Incompliance
@@ -16,21 +16,21 @@ public partial class Incompliance
     public static readonly IncomplianceRecord<string> NameIsEmpty = new
     (
         StringPredicates.IsEmpty,
-        InvalidNameFlags.NameStringValueIsEmpty,
+        InvalidNameTags.IsEmpty,
         IncomplianceSeverity.Fatal
     );
 
     public static readonly IncomplianceRecord<string> NameStartsWithLowerCase = new
     (
         StringPredicates.StartsWithLowerCase,
-        InvalidNameFlags.NameStringValueStartsWithLowerCaseChar,
+        InvalidNameTags.StartsWithLowerCaseChar,
         IncomplianceSeverity.Error
     );
 
     public static readonly IncomplianceRecord<string, int> NameExceedsLength = new
     (
         StringPredicates.ExceedsLength,
-        InvalidNameFlags.NameStringValueMaxLengthExceeded,
+        InvalidNameTags.LengthExceeded,
         IncomplianceSeverity.Error
     );
 }
