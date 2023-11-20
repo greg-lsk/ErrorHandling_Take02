@@ -28,7 +28,7 @@ public class Person
         evaluation.Evaluate(IncomplianceChain.InvalidName,
                             AttachingBehaviour.Accumulative,
                             firstName, lastName);
-                
+            
         return evaluation.YieldResult(firstName,
                                       lastName,
                                       (fn, ln) => new Person(fn, ln));

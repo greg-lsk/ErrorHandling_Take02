@@ -1,6 +1,6 @@
 ﻿namespace ErrorHandling.Predicates;
 
-public partial class StringPredicates
+public static class StringPredicates
 {
     public static bool IsEmpty(string subject) => subject == string.Empty;
     public static bool IsNotEmpty(string subject) => subject != string.Empty;
