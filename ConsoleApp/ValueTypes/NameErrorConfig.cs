@@ -2,7 +2,6 @@
 using ErrorHandling.Evaluating;
 using ErrorHandling.Predicates;
 
-
 namespace ConsoleApp.ValueTypes;
 
 public enum InvalidNameFlags
