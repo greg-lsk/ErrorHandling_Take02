@@ -1,6 +1,6 @@
 ﻿namespace ErrorHandling.Rule;
 
-public readonly struct DomainRule<TSubject>
+public class DomainRule<TSubject>
 {
     private readonly Func<TSubject, bool> _predicate;
 
