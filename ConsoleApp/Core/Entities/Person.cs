@@ -1,9 +1,9 @@
-﻿using ConsoleApp.ValueTypes;
+﻿using ConsoleApp.Core.ValueTypes;
 using ErrorHandling.Evaluating;
 using ErrorHandling.ResultUtilities;
 
 
-namespace ConsoleApp.Entities;
+namespace ConsoleApp.Core.Entities;
 
 public class Person
 {
@@ -28,7 +28,7 @@ public class Person
         evaluation.Evaluate(IncomplianceChain.InvalidName,
                             AttachingBehaviour.Accumulative,
                             firstName, lastName);
-            
+
         return evaluation.YieldResult(firstName,
                                       lastName,
                                       (fn, ln) => new Person(fn, ln));

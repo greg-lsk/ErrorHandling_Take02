@@ -2,29 +2,19 @@
 
 public class RuleSequence<TSubject>
 {
-    internal readonly DomainRulez<TSubject>[]? ShortCircutRules;
-    internal readonly DomainRulez<TSubject>[] Rules;
+    internal readonly DomainRule[]? ShortCircutRules;
+    internal readonly DomainRule[] Rules;
 
-    public RuleSequence(params (
-        Func<TSubject, bool> predicate, 
-        Enum incomplianceTag, 
-        IncomplianceSeverity incomplianceSeverity, 
-        bool enablesShortCircuiting)[] rules)
+    public RuleSequence(params (DomainRule rule, bool enablesShortCircuiting)[] rules)
     {
         ShortCircutRules = rules
-            .Where(rule => rule.enablesShortCircuiting)
-            .Select(rule => new DomainRulez<TSubject>(
-                rule.predicate,
-                rule.incomplianceTag,
-                rule.incomplianceSeverity)
-            ).ToArray();
+            .Where(r => r.enablesShortCircuiting)
+            .Select(r => r.rule)
+            .ToArray();
 
         Rules = rules
-            .Where(rule => !rule.enablesShortCircuiting)
-            .Select(rule => new DomainRulez<TSubject>(
-                rule.predicate, 
-                rule.incomplianceTag, 
-                rule.incomplianceSeverity)
-            ).ToArray();
+            .Where(r => !r.enablesShortCircuiting)
+            .Select(r => r.rule)
+            .ToArray();
     }
 }

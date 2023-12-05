@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-
-using ConsoleApp.Entities;
 using ErrorHandling;
+using ConsoleApp.Core.Entities;
 
 
 EvaluationConfig evaluationConfig = new();

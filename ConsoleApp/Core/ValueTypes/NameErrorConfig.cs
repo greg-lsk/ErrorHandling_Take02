@@ -1,9 +1,11 @@
 ﻿using ErrorHandling;
+using ErrorHandling.Rule;
 using ErrorHandling.Evaluating;
 using ErrorHandling.Predicates;
-using ErrorHandling.Rule;
+using ConsoleApp.Core.Rules;
 
-namespace ConsoleApp.ValueTypes;
+
+namespace ConsoleApp.Core.ValueTypes;
 
 public enum InvalidNameTags
 {
@@ -41,23 +43,12 @@ public static partial class IncomplianceChain
 {
     public static readonly RuleSequence<string> InvalidNameSeq = new
     (
-        (StringPredicates.IsEmpty, 
-        InvalidNameTags.IsEmpty, 
-        IncomplianceSeverity.Error,
-        enablesShortCircuiting: true),
-
-        (StringPredicates.StartsWithLowerCase, 
-        InvalidNameTags.StartsWithLowerCase, 
-        IncomplianceSeverity.Error,
-        enablesShortCircuiting: false),
-
-        (s => StringPredicates.ExceedsLength(s, Name.MaxLength), 
-        InvalidNameTags.LengthExceeded, 
-        IncomplianceSeverity.Error,
-        enablesShortCircuiting: false)
+        (StringRule.IsNotEmpty, enablesShortCircuiting: true),
+        (NameRule.WithinLength, enablesShortCircuiting: false),
+        (StringRule.StartsWithUpperCase, enablesShortCircuiting: false)
     );
 
-    public static void InvalidName(Evaluator<string> evaluator) => 
+    public static void InvalidName(Evaluator<string> evaluator) =>
         evaluator.Examine(in Incompliance.NameIsEmpty)
                  .Examine(in Incompliance.NameStartsWithLowerCase)
                  .Examine(in Incompliance.NameExceedsLength, Name.MaxLength);
