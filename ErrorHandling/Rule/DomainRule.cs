@@ -1,23 +1,5 @@
 ﻿namespace ErrorHandling.Rule;
 
-public class DomainRulez<TSubject>
-{
-    private readonly Func<TSubject, bool> _predicate;
-
-    internal readonly Enum IncomplianceTag;
-    internal readonly IncomplianceSeverity IncomplianceSeverity;
-
-
-    internal DomainRulez(Func<TSubject, bool> predicate,
-                        Enum incomplianceTag,
-                        IncomplianceSeverity incomplianceSeverity)
-    {
-        _predicate = predicate;
-        IncomplianceTag = incomplianceTag;
-        IncomplianceSeverity = incomplianceSeverity;
-    }
-}
-
 internal enum EvaluationLogic
 {
     SingularDirect,
@@ -26,6 +8,7 @@ internal enum EvaluationLogic
     SingularIndirect,
     SequentialIndirect
 }
+
 public abstract class DomainRule
 {
     internal readonly object Criterion;
