@@ -1,4 +1,8 @@
-﻿public enum NameTags
+﻿namespace ConsoleApp.Core.Rules;
+
+public enum NameTags
 {
-    InvalidStringFormat
+    NullReference,
+    InvalidStringFormat,
+    InvalidName
 }

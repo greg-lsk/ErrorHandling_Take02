@@ -8,6 +8,16 @@ namespace ConsoleApp.Core.Rules;
 
 public static class NameRule
 {
+
+    public readonly static DomainRule IsNotNull = RuleBuilder.Create
+    (
+        predicate: (Name n) => GenericPredicates.IsNotNull(n),
+
+        incomplianceTag:      NameTags.NullReference,
+        incomplianceSeverity: IncomplianceSeverity.Error
+    );
+
+
     public readonly static DomainRule WithinLength = RuleBuilder.Create
     (
         predicate: (string s) => StringPredicates.WithinLength(s, Name.MaxLength),
@@ -16,12 +26,23 @@ public static class NameRule
         incomplianceSeverity: IncomplianceSeverity.Error
     );
 
-    public readonly static DomainRule ValidStringFormat = RuleBuilder.Create
+
+    public readonly static DomainRule HasValidStringFormat = RuleBuilder.Create
     (
         selector: (Name n) => n.StringValue,
-        sequence: NameRuleSequence.StringFormat,
+        sequence: NameRuleSequence.ForStringFormat,
 
         incomplianceTag:      NameTags.InvalidStringFormat,
         incomplianceSeverity: IncomplianceSeverity.Error
     );
+
+
+    public readonly static DomainRule IsValid = RuleBuilder.Create
+    (
+        sequence: NameRuleSequence.ForValidName,
+
+        incomplianceTag:      NameTags.InvalidName,
+        incomplianceSeverity: IncomplianceSeverity.Error
+    );
+
 }
