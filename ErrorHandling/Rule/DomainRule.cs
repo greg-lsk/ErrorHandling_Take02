@@ -1,13 +1,7 @@
-﻿namespace ErrorHandling.Rule;
+﻿using ErrorHandling.Evaluating.Actions;
 
-internal enum EvaluationLogic
-{
-    SingularDirect,
-    SequentialDirect,
 
-    SingularIndirect,
-    SequentialIndirect
-}
+namespace ErrorHandling.Rule;
 
 public abstract class DomainRule
 {
@@ -15,8 +9,6 @@ public abstract class DomainRule
 
     internal readonly Enum IncomplianceTag;
     internal readonly IncomplianceSeverity IncomplianceSeverity;
-
-    internal abstract EvaluationLogic EvaluationLogic { get; }
 
 
     internal DomainRule(object criterion,
@@ -29,25 +21,22 @@ public abstract class DomainRule
     }
 }
 
-internal class DirectRule<TSubject> : DomainRule
+internal class DirectRule<TSubject> : DomainRule, IEvaluationActionCarrier<TSubject>
 {
+    public EvaluationAction<TSubject> Action => EvaluationActionProvider.Get(this);
+
+
     public DirectRule(object criterion,
                       Enum incomplianceTag,
                       IncomplianceSeverity incomplianceSeverity)
         : base(criterion, incomplianceTag, incomplianceSeverity) { }
-
-
-    internal override EvaluationLogic EvaluationLogic => Criterion switch
-    {
-        Func<TSubject, bool>   => EvaluationLogic.SingularDirect ,
-        RuleSequence<TSubject> => EvaluationLogic.SequentialDirect,
-        _ => throw new Exception()
-    };
 }
 
-internal class IndirectRule<TSubject, TProperty> : DomainRule
+internal class IndirectRule<TSubject, TProperty> : DomainRule, IEvaluationActionCarrier<TSubject>
 {
     internal Func<TSubject, TProperty> Selector;
+    public EvaluationAction<TSubject> Action => EvaluationActionProvider.Get(this);
+
 
     public IndirectRule(object criterion,
                         Enum incomplianceTag,
@@ -57,11 +46,4 @@ internal class IndirectRule<TSubject, TProperty> : DomainRule
     {
         Selector = selector;
     }
-
-    internal override EvaluationLogic EvaluationLogic => Criterion switch
-    {
-        Func<TProperty, bool>   => EvaluationLogic.SingularIndirect,
-        RuleSequence<TProperty> => EvaluationLogic.SequentialIndirect,
-        _ => throw new Exception()
-    };
 }

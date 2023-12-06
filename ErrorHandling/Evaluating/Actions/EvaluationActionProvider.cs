@@ -1,7 +1,7 @@
 ﻿using ErrorHandling.Rule;
 
 
-namespace ErrorHandling.Evaluating.Action;
+namespace ErrorHandling.Evaluating.Actions;
 
 internal static class EvaluationActionProvider
 {

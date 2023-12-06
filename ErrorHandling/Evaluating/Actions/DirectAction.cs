@@ -1,19 +1,17 @@
 ﻿using ErrorHandling.Rule;
 
 
-namespace ErrorHandling.Evaluating.Action;
+namespace ErrorHandling.Evaluating.Actions;
 
-internal static class IndirectAction<TSubject, TProperty>
+internal static class DirectAction<TSubject>
 {
     internal readonly static EvaluationAction<TSubject> Singular
         = (in Evaluation e, TSubject s, DomainRule r) =>
         {
-            var rule = r as IndirectRule<TSubject, TProperty>;
-            var subject = rule!.Selector.Invoke(s);
-            var criterion = r.Criterion as Func<TProperty, bool>;
+            var criterion = r.Criterion as Func<TSubject, bool>;
 
             return EvaluationCenter.Evaluate(in e,
-                                             subject,
+                                             s,
                                              criterion!,
                                              r.IncomplianceTag,
                                              r.IncomplianceSeverity);
@@ -22,9 +20,7 @@ internal static class IndirectAction<TSubject, TProperty>
     internal readonly static EvaluationAction<TSubject> Sequencial
         = (in Evaluation e, TSubject s, DomainRule r) =>
         {
-            var rule = r as IndirectRule<TSubject, TProperty>;
-            var subject = rule!.Selector.Invoke(s);
-            var criterion = r.Criterion as RuleSequence<TProperty>;
+            var criterion = r.Criterion as RuleSequence<TSubject>;
 
             return true;
         };
