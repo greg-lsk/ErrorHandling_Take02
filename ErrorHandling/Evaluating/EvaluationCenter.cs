@@ -5,21 +5,21 @@ namespace ErrorHandling.Evaluating;
 
 internal static class EvaluationCenter
 {
-    internal static bool Evaluate<TSubject, TProperty>(in Evaluation evaluation,
-                                                       TSubject subject,
-                                                       DomainRule rule)
+    internal static bool Evaluate<TSubject>(in Evaluation evaluation,
+                                            TSubject subject,
+                                            Func<TSubject, bool> predicate,
+                                            Enum incomplianceTag,
+                                            IncomplianceSeverity severity)
     {
-        var indirectRule = rule as IndirectRule<TSubject, TProperty>;
-
-        return true;
+        return predicate.Invoke(subject);
     }
 
     internal static bool Evaluate<TSubject>(in Evaluation evaluation,
                                             TSubject subject,
-                                            DomainRule rule)
+                                            RuleSequence<TSubject> sequence,
+                                            Enum incomplianceTag,
+                                            IncomplianceSeverity severity)
     {
-        var directRule = rule as DirectRule<TSubject>;
-
         return true;
     }
 }
