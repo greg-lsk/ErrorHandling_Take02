@@ -1,11 +1,9 @@
 ﻿using ErrorHandling.Evaluating;
-using System.Runtime.InteropServices.JavaScript;
 
 
 namespace ErrorHandling.Drafts;
 
-public delegate bool Evaluation<TSubject>(TSubject subject, in EvaluationState state);
-public delegate bool EvaluationPredicate<TSubject>(TSubject subject);
+
 
 
 public abstract class Evaluation

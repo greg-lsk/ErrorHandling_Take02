@@ -1,15 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 
-using ErrorHandling.Rule;
 using ErrorHandling.Reporting;
 using ErrorHandling.Reporting.Logging;
 using ErrorHandling.Reporting.CallStackInfo;
 using ErrorHandling.ResultUtilities;
-using ErrorHandling.Evaluating.Actions;
 
 
-namespace ErrorHandling.Evaluating;
+namespace ErrorHandling;
 
 public readonly partial struct EvaluationState
 {
@@ -34,14 +32,6 @@ public readonly partial struct EvaluationState
         var logger = EvaluationLogger.Get<TCategory>();
         return new(logger, callerMemberName, callerLineNumber);
     }
-
-
-    public bool Evaluate<TSubject>(TSubject subject, DomainRule rule, EvaluationBehavior behavior)
-    {
-        return (rule as IEvaluationActionCarrier<TSubject>)!.Action(subject, rule, Report, behavior);
-    }
-        
-
 
     public Result<TResult> YieldResult<TResult>(Func<TResult> yieldDelegate)
     {
