@@ -1,10 +1,4 @@
-﻿using ErrorHandling.Evaluating;
-
-
-namespace ErrorHandling.Drafts;
-
-
-
+﻿namespace ErrorHandling.Drafts;
 
 public abstract class Evaluation
 {
