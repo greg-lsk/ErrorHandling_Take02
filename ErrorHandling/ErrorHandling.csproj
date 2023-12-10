@@ -8,15 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include=".Drafts\FunctionalEvaluationDraft.cs" />
-    <Compile Include=".Drafts\SequencialEvaluationBuilderDraft.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
 	  
 	<InternalsVisibleTo Include="ErrorHandling.Benchmark" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include=".Drafts\" />
   </ItemGroup>
 
 </Project>

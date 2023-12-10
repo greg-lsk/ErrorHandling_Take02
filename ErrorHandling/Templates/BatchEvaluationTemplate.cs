@@ -1,4 +1,4 @@
-﻿using ErrorHandling.Templates.Abstract;
+﻿using ErrorHandling.Templates.Abstractions;
 
 
 namespace ErrorHandling.Templates;
@@ -18,12 +18,11 @@ internal class BatchEvaluationTemplate<TSubject> : EvaluationTemplate<TSubject>
     private int Length => ShortCircuitCount + RegularCount;
 
 
-    internal BatchEvaluationTemplate(EvaluationPredicate<TSubject> predicate,
+    internal BatchEvaluationTemplate(Evaluation<TSubject>[]? shortCircuitEvaluations,
+                                     Evaluation<TSubject>[]? regularEvaluations,
                                      IncomplianceSeverity severity,
                                      Enum? successTag,
-                                     Enum? incomplianceTag,
-                                     Evaluation<TSubject>[]? shortCircuitEvaluations,
-                                     Evaluation<TSubject>[]? regularEvaluations)
+                                     Enum? incomplianceTag)
         : base(severity, successTag, incomplianceTag)
     {
         _shortCircuitEvaluations = shortCircuitEvaluations;

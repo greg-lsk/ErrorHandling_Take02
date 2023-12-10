@@ -1,4 +1,4 @@
-﻿using ErrorHandling.Templates.Abstract;
+﻿using ErrorHandling.Templates.Abstractions;
 
 
 namespace ErrorHandling.Templates;
