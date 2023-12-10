@@ -12,8 +12,8 @@ public abstract class DomainRule
 
 
     internal DomainRule(object criterion,
-                       Enum incomplianceTag,
-                       IncomplianceSeverity incomplianceSeverity)
+                        Enum incomplianceTag,
+                        IncomplianceSeverity incomplianceSeverity)
     {
         Criterion = criterion;
         IncomplianceTag = incomplianceTag;
@@ -26,22 +26,22 @@ internal class DirectRule<TSubject> : DomainRule, IEvaluationActionCarrier<TSubj
     public EvaluationAction<TSubject> Action => EvaluationActionProvider.Get(this);
 
 
-    public DirectRule(object criterion,
-                      Enum incomplianceTag,
-                      IncomplianceSeverity incomplianceSeverity)
+    internal DirectRule(object criterion,
+                        Enum incomplianceTag,
+                        IncomplianceSeverity incomplianceSeverity)
         : base(criterion, incomplianceTag, incomplianceSeverity) { }
 }
 
 internal class IndirectRule<TSubject, TProperty> : DomainRule, IEvaluationActionCarrier<TSubject>
 {
-    internal Func<TSubject, TProperty> Selector;
+    internal readonly Func<TSubject, TProperty> Selector;
     public EvaluationAction<TSubject> Action => EvaluationActionProvider.Get(this);
 
 
-    public IndirectRule(object criterion,
-                        Enum incomplianceTag,
-                        IncomplianceSeverity incomplianceSeverity,
-                        Func<TSubject, TProperty> selector) :
+    internal IndirectRule(object criterion,
+                          Enum incomplianceTag,
+                          IncomplianceSeverity incomplianceSeverity,
+                          Func<TSubject, TProperty> selector) :
         base(criterion, incomplianceTag, incomplianceSeverity)
     {
         Selector = selector;

@@ -23,11 +23,11 @@ public class Person
 
     public static Result<Person> Create(string firstName, string lastName)
     {
-        var evaluation = Evaluation.Init<Person>();
+        var evaluation = EvaluationState.Init<Person>();
 
-        evaluation.Evaluate(IncomplianceChain.InvalidName,
-                            AttachingBehaviour.Accumulative,
-                            firstName, lastName);
+/*        evaluation.Evaluate(IncomplianceChain.InvalidName,
+                            EvaluationBehavior.Accumulative,
+                            firstName, lastName);*/
 
         return evaluation.YieldResult(firstName,
                                       lastName,
@@ -38,17 +38,17 @@ public class Person
     public VoidResult Rename(StructSelector<Person, Name> nameSelector,
                              string newValue)
     {
-        var evaluation = Evaluation.Init<Person>();
+        var evaluation = EvaluationState.Init<Person>();
 
-        evaluation.Evaluate(newValue,
+/*        evaluation.Evaluate(newValue,
                             IncomplianceChain.InvalidName,
-                            AttachingBehaviour.Accumulative);
+                            EvaluationBehavior.Accumulative);*/
 
         return evaluation.YieldVoid(nameSelector,
                                     newValue,
                                     (ns, nv) => ns.Invoke(this) = new Name(nv));
     }
 
-    public void Print() => Console.WriteLine($"{_firstName.StringValue}\n" +
-                                             $"{_lastName.StringValue}");
+/*    public void Print() => Console.WriteLine($"{_firstName._stringValue}\n" +
+                                             $"{_lastName._stringValue}");*/
 }

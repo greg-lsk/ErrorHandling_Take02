@@ -1,4 +1,4 @@
-﻿namespace ErrorHandling.Evaluating;
+﻿/*namespace ErrorHandling.Evaluating;
 
 public partial class Evaluator<TSubject>
 {
@@ -19,4 +19,4 @@ public partial class Evaluator<TSubject>
 
         return this;
     }
-}
+}*/

@@ -8,26 +8,26 @@ public partial class Evaluator<TSubject>
     private TSubject? _subject;
 
     private bool _operationSeized;
-    private AttachingBehaviour _attachingBehaviour;
+    private EvaluationBehavior _attachingBehaviour;
 
     private int _reportLink;
     private readonly EvaluationReport _report;
 
     private bool ErrorsOccured => _report.EvaluationYieldedErrors(_reportLink);
-    private bool AbortExamination => _attachingBehaviour == AttachingBehaviour.OnErrorStop
+    private bool AbortExamination => _attachingBehaviour == EvaluationBehavior.OnErrorStop
                                      && ErrorsOccured;
 
 
     internal Evaluator(EvaluationReport report)
     {
         _report = report;
-        _attachingBehaviour = AttachingBehaviour.OnErrorStop;
+        _attachingBehaviour = EvaluationBehavior.OnErrorStop;
     }
 
 
     public Evaluator<TSubject> Evaluate(TSubject? subject,
                                         Action<Evaluator<TSubject>> evaluateAgainst,
-                                        AttachingBehaviour evaluationBehaviour)
+                                        EvaluationBehavior evaluationBehaviour)
     {
         ResetState();
 
@@ -42,7 +42,7 @@ public partial class Evaluator<TSubject>
     }
 
     public Evaluator<TSubject> Evaluate(Action<Evaluator<TSubject>> evaluateAgainst,
-                                        AttachingBehaviour evaluationBehaviour,
+                                        EvaluationBehavior evaluationBehaviour,
                                         params TSubject?[] subjects)
     {
         for(int i=0; i<subjects.Length; ++i)
@@ -51,7 +51,7 @@ public partial class Evaluator<TSubject>
         return this;
     }
 
-    public Evaluator<TSubject> Examine(in IncomplianceRecord<TSubject> incompliance)
+/*    public Evaluator<TSubject> Examine(in IncomplianceRecord<TSubject> incompliance)
     {
         if (_operationSeized) return this;
 
@@ -65,7 +65,7 @@ public partial class Evaluator<TSubject>
         UpdateReport(incompliance.Flag, incompliance.Severity);
 
         return this;
-    }
+    }*/
 
 
     private void NullDetected()

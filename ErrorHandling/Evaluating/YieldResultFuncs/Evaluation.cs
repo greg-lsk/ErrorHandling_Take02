@@ -2,7 +2,7 @@
 
 namespace ErrorHandling.Evaluating;
 
-public readonly partial struct Evaluation
+public readonly partial struct EvaluationState
 {
     public VoidResult YieldVoid<T1>(T1 param01, Action<T1> yieldAction)
     {

@@ -1,8 +1,10 @@
 ﻿using ErrorHandling.Rule;
+using ErrorHandling.Reporting;
 
 
 namespace ErrorHandling.Evaluating.Actions;
 
-internal delegate bool EvaluationAction<TSubject>(in Evaluation evaluation,
-                                                  TSubject subject,
-                                                  DomainRule rule);
+internal delegate bool EvaluationAction<TSubject>(TSubject subject,
+                                                  DomainRule rule,
+                                                  EvaluationReport report,
+                                                  EvaluationBehavior behavior);

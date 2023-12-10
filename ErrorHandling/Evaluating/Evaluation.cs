@@ -1,15 +1,17 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 
+using ErrorHandling.Rule;
 using ErrorHandling.Reporting;
+using ErrorHandling.Reporting.Logging;
 using ErrorHandling.Reporting.CallStackInfo;
 using ErrorHandling.ResultUtilities;
-using ErrorHandling.Reporting.Logging;
+using ErrorHandling.Evaluating.Actions;
 
 
 namespace ErrorHandling.Evaluating;
 
-public readonly partial struct Evaluation
+public readonly partial struct EvaluationState
 {
     private ILogger Logger { get; }
 
@@ -17,7 +19,7 @@ public readonly partial struct Evaluation
     internal EvaluationReport Report { get; }
 
 
-    internal Evaluation(ILogger logger, string callerMemberName, int callerLineNumber)
+    internal EvaluationState(ILogger logger, string callerMemberName, int callerLineNumber)
     {
         Logger = logger;
         Report = new();
@@ -25,7 +27,7 @@ public readonly partial struct Evaluation
     }
 
 
-    public static Evaluation Init<TCategory>(
+    public static EvaluationState Init<TCategory>(
         [CallerMemberName] string callerMemberName = null!,
         [CallerLineNumber] int callerLineNumber = 0)
     {
@@ -33,36 +35,13 @@ public readonly partial struct Evaluation
         return new(logger, callerMemberName, callerLineNumber);
     }
 
-    public Evaluator<TSubject> Evaluate<TSubject>(TSubject? subject,
-                                                  Action<Evaluator<TSubject>> evaluateAgainst,
-                                                  AttachingBehaviour evaluationBehaviour)
+
+    public bool Evaluate<TSubject>(TSubject subject, DomainRule rule, EvaluationBehavior behavior)
     {
-        var evaluator = new Evaluator<TSubject>(Report);
-
-        return evaluator.Evaluate(subject, evaluateAgainst, evaluationBehaviour);
+        return (rule as IEvaluationActionCarrier<TSubject>)!.Action(subject, rule, Report, behavior);
     }
+        
 
-    public Evaluator<TSubject> Evaluate<TSubject>(Action<Evaluator<TSubject>> evaluateAgainst,
-                                                  AttachingBehaviour evaluationBehaviour,
-                                                  params TSubject?[] subjects)
-    {
-        var evaluator = new Evaluator<TSubject>(Report);
-
-        return evaluator.Evaluate(evaluateAgainst, evaluationBehaviour, subjects);
-    }
-
-    public void Evaluate(IResult result)
-    {
-        if (result.IsValid) return;
-
-        Report.LogExternal(result.Report!);
-    }
-
-    public void Evaluate(params IResult[] results)
-    {
-        for(int i = 0; i<results.Length; ++i)
-            if (!results[i].IsValid) Report.LogExternal(results[i].Report!);
-    }
 
     public Result<TResult> YieldResult<TResult>(Func<TResult> yieldDelegate)
     {

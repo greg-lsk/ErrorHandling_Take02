@@ -5,7 +5,7 @@ internal enum UniversalFlags
     NullDetected
 }
 
-public enum AttachingBehaviour
+public enum EvaluationBehavior
 {
     Accumulative,
     OnErrorStop
