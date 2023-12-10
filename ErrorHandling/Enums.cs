@@ -3,6 +3,11 @@
 public enum IncomplianceSeverity
 {
     Alert,
-    Error,
-    Fatal
+    Error
+}
+
+public enum EvaluationBehavior
+{
+    Accumulative,
+    OnErrorStop
 }
