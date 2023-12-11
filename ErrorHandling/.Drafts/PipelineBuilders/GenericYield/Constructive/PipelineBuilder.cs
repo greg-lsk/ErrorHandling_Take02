@@ -2,7 +2,7 @@
 using Ctor = ErrorHandling.Drafts.Pipelining.YieldDelegates.Generic.Contsructive;
 
 
-namespace ErrorHandling.Drafts.PipelineBuilders;
+namespace ErrorHandling.Drafts.PipelineBuilders.GenericYield.Constructive;
 
 public class PipelineBuilder<TSubject, T1, T2>
 {
@@ -13,19 +13,19 @@ public class PipelineBuilder<TSubject, T1, T2>
     private Func<T1, T2, TSubject>? _middleAction;
 
 
-    public PipelineBuilder<TSubject, T1, T2> EvaluateFirstArgumentWith(Evaluation<T1> evaluation)
+    public PipelineBuilder<TSubject, T1, T2> EvaluateFirstArgument(Evaluation<T1> evaluation)
     {
         _arg01Evaluation = evaluation;
         return this;
     }
 
-    public PipelineBuilder<TSubject, T1, T2> EvaluateSecondArgumentWith(Evaluation<T2> evaluation)
+    public PipelineBuilder<TSubject, T1, T2> EvaluateSecondArgument(Evaluation<T2> evaluation)
     {
         _arg02Evaluation = evaluation;
         return this;
     }
 
-    public PipelineBuilder<TSubject, T1, T2> OnSuccess(Func<T1, T2, TSubject> action)
+    public PipelineBuilder<TSubject, T1, T2> ForAction(Func<T1, T2, TSubject> action)
     {
         _middleAction = action;
         return this;

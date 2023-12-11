@@ -23,7 +23,7 @@ using (var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole())
     string lastName = "Liaskas";
 
     var person = PersonActions.Create(firstName, lastName);
-    
+
     person.ActUpon(p => PersonActions.Rename(p, p => ref p.FirstName, "Gregg"));
 }
 

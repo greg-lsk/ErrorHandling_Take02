@@ -1,5 +1,4 @@
 ﻿using ConsoleApp.Core.ValueTypes;
-using ErrorHandling;
 using ErrorHandling.ResultUtilities;
 
 
@@ -20,34 +19,8 @@ public class Person
         _lastName = new(lastName);
     }
 
-
-    public static Result<Person> Create(string firstName, string lastName)
-    {
-        var evaluation = EvaluationState.Init<Person>();
-
-/*        evaluation.Evaluate(IncomplianceChain.InvalidName,
-                            EvaluationBehavior.Accumulative,
-                            firstName, lastName);*/
-
-        return evaluation.YieldResult(firstName,
-                                      lastName,
-                                      (fn, ln) => new Person(fn, ln));
-    }
-
-
-    public VoidResult Rename(StructSelector<Person, Name> nameSelector,
-                             string newValue)
-    {
-        var evaluation = EvaluationState.Init<Person>();
-
-/*        evaluation.Evaluate(newValue,
-                            IncomplianceChain.InvalidName,
-                            EvaluationBehavior.Accumulative);*/
-
-        return evaluation.YieldVoid(nameSelector,
-                                    newValue,
-                                    (ns, nv) => ns.Invoke(this) = new Name(nv));
-    }
-
+    public void Rename(StructSelector<Person, Name> nameSelector,string newValue)
+        =>  nameSelector.Invoke(this) = new Name(newValue);
+    
     public void Print() => Console.WriteLine($"{_firstName} {_lastName}");
 }
