@@ -49,6 +49,5 @@ public class Person
                                     (ns, nv) => ns.Invoke(this) = new Name(nv));
     }
 
-/*    public void Print() => Console.WriteLine($"{_firstName._stringValue}\n" +
-                                             $"{_lastName._stringValue}");*/
+    public void Print() => Console.WriteLine($"{_firstName} {_lastName}");
 }

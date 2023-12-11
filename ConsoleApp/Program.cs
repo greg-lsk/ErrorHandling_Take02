@@ -2,7 +2,8 @@
 
 using ErrorHandling;
 using ErrorHandling.Predicates;
-using ConsoleApp.Core.ErrorConfig.ForName;
+using ConsoleApp.Application.ErrorConfig.ForName;
+using ConsoleApp.Application.Drafts.Pipelines;
 
 
 EvaluationConfig evaluationConfig = new();
@@ -18,14 +19,12 @@ using (var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole())
               .ActUpon(p => p.Print());*/
 
 
-    var ev = EvaluationState.Init<string>();
-    string name = "Gregory";
+    string firstName = "Gregory";
+    string lastName = "Liaskas";
 
-    StringEvaluation.IsValid(name, in ev);
+    var person = PersonActions.Create(firstName, lastName);
     
-    
-
-    
+    person.ActUpon(p => PersonActions.Rename(p, p => ref p.FirstName, "Gregg"));
 }
 
 internal class StringEvaluation

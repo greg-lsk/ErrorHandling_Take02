@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp.Core.ErrorConfig.ForName;
+﻿namespace ConsoleApp.Application.ErrorConfig.ForName;
 
 public enum NameTags
 {
