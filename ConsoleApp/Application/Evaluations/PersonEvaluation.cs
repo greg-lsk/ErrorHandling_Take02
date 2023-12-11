@@ -1,10 +1,9 @@
 ﻿using ErrorHandling;
 using ErrorHandling.Predicates;
 using ConsoleApp.Core.Entities;
-using ConsoleApp.Application.ErrorConfig.ForName;
 
 
-namespace ConsoleApp.Application.ErrorConfig.ForPerson;
+namespace ConsoleApp.Application.Evaluations;
 
 public class PersonEvaluation
 {

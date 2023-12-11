@@ -4,6 +4,7 @@ using ErrorHandling.ResultUtilities;
 
 namespace ConsoleApp.Core.Entities;
 
+public delegate ref Name NameSelector(Person entity);
 public class Person
 {
     private Name _firstName;
@@ -19,8 +20,9 @@ public class Person
         _lastName = new(lastName);
     }
 
-    public void Rename(StructSelector<Person, Name> nameSelector,string newValue)
-        =>  nameSelector.Invoke(this) = new Name(newValue);
+
+    public void Rename(NameSelector selector,string newValue)
+        =>  selector.Invoke(this) = new Name(newValue);
     
     public void Print() => Console.WriteLine($"{_firstName} {_lastName}");
 }

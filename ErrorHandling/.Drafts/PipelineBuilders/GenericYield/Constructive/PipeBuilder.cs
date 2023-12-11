@@ -12,13 +12,13 @@ public class PipeBuilder<T1, T2, TSubject>
     private Func<T1, T2, TSubject>? _createDelegate;
 
 
-    public PipeBuilder<T1, T2, TSubject> EvaluateFirstArgument(Evaluation<T1> evaluation)
+    public PipeBuilder<T1, T2, TSubject> GuardFirstArgument(Evaluation<T1> evaluation)
     {
         _arg01Evaluation = evaluation;
         return this;
     }
 
-    public PipeBuilder<T1, T2, TSubject> EvaluateSecondArgument(Evaluation<T2> evaluation)
+    public PipeBuilder<T1, T2, TSubject> GuardSecondArgument(Evaluation<T2> evaluation)
     {
         _arg02Evaluation = evaluation;
         return this;

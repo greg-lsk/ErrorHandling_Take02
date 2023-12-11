@@ -13,19 +13,19 @@ public class PipeBuilder<T1, T2, T3>
     private Action<T1, T2, T3>? _action;
 
 
-    public PipeBuilder<T1, T2, T3> EvaluateFirstArgument(Evaluation<T1>? evaluation = null)
+    public PipeBuilder<T1, T2, T3> GuardFirstArgument(Evaluation<T1>? evaluation = null)
     {
         _arg01Evaluation = evaluation;
         return this;
     }
 
-    public PipeBuilder<T1, T2, T3> EvaluateSecondArgument(Evaluation<T2>? evaluation = null)
+    public PipeBuilder<T1, T2, T3> GuardSecondArgument(Evaluation<T2>? evaluation = null)
     {
         _arg02Evaluation = evaluation;
         return this;
     }
 
-    public PipeBuilder<T1, T2, T3> EvaluateThirdArgument(Evaluation<T3>? evaluation = null)
+    public PipeBuilder<T1, T2, T3> GuardThirdArgument(Evaluation<T3>? evaluation = null)
     {
         _arg03Evaluation = evaluation;
         return this;
