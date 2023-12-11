@@ -13,8 +13,10 @@
     <Compile Include=".Drafts\ErrorTracing\Identification\RefId.cs" />
     <Compile Include=".Drafts\ErrorTracing\Identification\ValueId.cs" />
     <Compile Include=".Drafts\ErrorTracing\ObjectRegistry.cs" />
-    <Compile Include=".Drafts\PipelineBuilders\GenericYield\Constructive\PipelineBuilder.cs" />
-    <Compile Include=".Drafts\PipelineBuilders\VoidYield\PipelineBuilder.cs" />
+    <Compile Include=".Drafts\PipelineBuilders\CtorPipe.cs" />
+    <Compile Include=".Drafts\PipelineBuilders\GenericYield\Constructive\PipeBuilder.cs" />
+    <Compile Include=".Drafts\PipelineBuilders\VoidPipes.cs" />
+    <Compile Include=".Drafts\PipelineBuilders\VoidYield\PipeBuilder.cs" />
     <Compile Include=".Drafts\Pipelining\YieldDelegates\Generic\Contsructive\Delegates.cs" />
     <Compile Include=".Drafts\Pipelining\YieldDelegates\Generic\Delegates.cs" />
     <Compile Include=".Drafts\Pipelining\YieldDelegates\Void\Delegates.cs" />

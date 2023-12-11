@@ -4,34 +4,33 @@ using Ctor = ErrorHandling.Drafts.Pipelining.YieldDelegates.Generic.Contsructive
 
 namespace ErrorHandling.Drafts.PipelineBuilders.GenericYield.Constructive;
 
-public class PipelineBuilder<TSubject, T1, T2>
+public class PipeBuilder<T1, T2, TSubject>
 {
-    private Evaluation<TSubject>? _subjectEvaluation;
     private Evaluation<T1>? _arg01Evaluation;
     private Evaluation<T2>? _arg02Evaluation;
 
-    private Func<T1, T2, TSubject>? _middleAction;
+    private Func<T1, T2, TSubject>? _createDelegate;
 
 
-    public PipelineBuilder<TSubject, T1, T2> EvaluateFirstArgument(Evaluation<T1> evaluation)
+    public PipeBuilder<T1, T2, TSubject> EvaluateFirstArgument(Evaluation<T1> evaluation)
     {
         _arg01Evaluation = evaluation;
         return this;
     }
 
-    public PipelineBuilder<TSubject, T1, T2> EvaluateSecondArgument(Evaluation<T2> evaluation)
+    public PipeBuilder<T1, T2, TSubject> EvaluateSecondArgument(Evaluation<T2> evaluation)
     {
         _arg02Evaluation = evaluation;
         return this;
     }
 
-    public PipelineBuilder<TSubject, T1, T2> ForAction(Func<T1, T2, TSubject> action)
+    public PipeBuilder<T1, T2, TSubject> ForAction(Func<T1, T2, TSubject> action)
     {
-        _middleAction = action;
+        _createDelegate = action;
         return this;
     }
 
-    public Ctor.Yield<TSubject, T1, T2> Build() =>
+    public Ctor.CtorPipe<T1, T2, TSubject> Build() =>
     (T1 arg01, T2 arg02) =>
     {
         var state = EvaluationState.Init<TSubject>();
@@ -40,7 +39,7 @@ public class PipelineBuilder<TSubject, T1, T2>
 
         if (!_arg02Evaluation.Invoke(arg02, in state)) return new Result<TSubject>();
 
-        var subject = _middleAction.Invoke(arg01, arg02);
+        var subject = _createDelegate.Invoke(arg01, arg02);
 
         return new Result<TSubject>(subject);
     };
