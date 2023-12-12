@@ -5,20 +5,20 @@ using ErrorHandling.Drafts.Pipelining;
 using ErrorHandling.Drafts.PipelineBuilders;
 
 
-namespace ConsoleApp.Application.Drafts.Pipelines;
+namespace ConsoleApp.Application.Pipelines;
 
 public class PersonPipe
 {
-    public static ResultPipe<string, string, Person> Create => 
+    public static ResultPipe<string, string, Person> Create =>
         Pipe.ForResult<Person>()
-            .WithParams<string, string>()
+            .WithParamTypes<string, string>()
             .GuardFirstArgument(StringEvaluation.IsValid)
             .GuardSecondArgument(StringEvaluation.IsValid)
             .ForAction((firstName, lastName) => new Person(firstName, lastName))
             .Build();
 
     public static VoidPipe<Person, NameSelector, string> Rename =>
-        Pipe.WithParams<Person, NameSelector, string>()
+        Pipe.WithParamTypes<Person, NameSelector, string>()
             .GuardThirdArgument(StringEvaluation.IsValid)
             .ForAction((person, selector, newValue) => person.Rename(selector, newValue))
             .Build();

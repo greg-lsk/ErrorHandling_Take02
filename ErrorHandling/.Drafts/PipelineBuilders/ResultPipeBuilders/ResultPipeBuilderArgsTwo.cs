@@ -2,7 +2,7 @@
 using ErrorHandling.ResultUtilities;
 
 
-namespace ErrorHandling.Drafts.PipelineBuilders.GenericYield.Constructive;
+namespace ErrorHandling.Drafts.PipelineBuilders.ResultPipeBuilders;
 
 public class ResultPipeBuilderArgsTwo<T1, T2, TSubject>
 {
