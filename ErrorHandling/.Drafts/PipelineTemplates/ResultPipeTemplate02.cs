@@ -13,8 +13,8 @@ internal class ResultPipeTemplate02<T1, T2, TSubject> : IPipeBuilder
 
 
     internal ResultPipeTemplate02(Func<T1, T2, TSubject> pipeDelegate,
-                                Evaluation<T1>? arg01Evaluation,
-                                Evaluation<T2>? arg02Evaluation)
+                                  Evaluation<T1>? arg01Evaluation,
+                                  Evaluation<T2>? arg02Evaluation)
     {
         _pipeDelegate = pipeDelegate;
         _arg01Evaluation = arg01Evaluation;
@@ -27,13 +27,18 @@ internal class ResultPipeTemplate02<T1, T2, TSubject> : IPipeBuilder
     {
         var state = EvaluationState.Init<TSubject>();
 
-        bool success = true;
-
-        if (_arg01Evaluation.Invoke(arg01, in state)) success = false;
-
-        if (_arg02Evaluation.Invoke(arg02, in state)) success = false;
-
-        var subject = _pipeDelegate.Invoke(arg01, arg02);
-        return new Result<TSubject>(subject);
+        var resultsHub = new ResultsHub();
+        resultsHub.Invoke(_arg01Evaluation, arg01, in state)
+                  .Invoke(_arg02Evaluation, arg02, in state);
+        
+        if(resultsHub.preconditionsMet)
+        {
+            var subject = _pipeDelegate.Invoke(arg01, arg02);
+            return new Result<TSubject>(subject);
+        }
+        else
+        {
+            return new Result<TSubject>();
+        }
     };
 }
