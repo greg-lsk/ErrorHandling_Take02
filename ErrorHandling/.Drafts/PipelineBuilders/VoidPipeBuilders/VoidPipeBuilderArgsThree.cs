@@ -1,10 +1,10 @@
-﻿using ErrorHandling.ResultUtilities;
-using Void = ErrorHandling.Drafts.Pipelining.YieldDelegates.Void;
+﻿using ErrorHandling.Drafts.Pipelining;
+using ErrorHandling.ResultUtilities;
 
 
-namespace ErrorHandling.Drafts.PipelineBuilders.VoidYield;
+namespace ErrorHandling.Drafts.PipelineBuilders.VoidPipeBuilders;
 
-public class PipeBuilder<T1, T2, T3>
+public class VoidPipeBuilderArgsThree<T1, T2, T3>
 {
     private Evaluation<T1>? _arg01Evaluation;
     private Evaluation<T2>? _arg02Evaluation;
@@ -13,31 +13,31 @@ public class PipeBuilder<T1, T2, T3>
     private Action<T1, T2, T3>? _action;
 
 
-    public PipeBuilder<T1, T2, T3> GuardFirstArgument(Evaluation<T1>? evaluation = null)
+    public VoidPipeBuilderArgsThree<T1, T2, T3> GuardFirstArgument(Evaluation<T1>? evaluation = null)
     {
         _arg01Evaluation = evaluation;
         return this;
     }
 
-    public PipeBuilder<T1, T2, T3> GuardSecondArgument(Evaluation<T2>? evaluation = null)
+    public VoidPipeBuilderArgsThree<T1, T2, T3> GuardSecondArgument(Evaluation<T2>? evaluation = null)
     {
         _arg02Evaluation = evaluation;
         return this;
     }
 
-    public PipeBuilder<T1, T2, T3> GuardThirdArgument(Evaluation<T3>? evaluation = null)
+    public VoidPipeBuilderArgsThree<T1, T2, T3> GuardThirdArgument(Evaluation<T3>? evaluation = null)
     {
         _arg03Evaluation = evaluation;
         return this;
     }
 
-    public PipeBuilder<T1, T2, T3> ForAction(Action<T1, T2, T3> action)
+    public VoidPipeBuilderArgsThree<T1, T2, T3> ForAction(Action<T1, T2, T3> action)
     {
         _action = action;
         return this;
     }
 
-    public Void.VoidPipe<T1, T2, T3> Build() =>
+    public VoidPipe<T1, T2, T3> Build() =>
     (T1 arg01, T2 arg02, T3 arg03) =>
     {
         var state = EvaluationState.Init<T1>();

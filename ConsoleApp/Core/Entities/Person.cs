@@ -1,5 +1,4 @@
 ﻿using ConsoleApp.Core.ValueTypes;
-using ErrorHandling.ResultUtilities;
 
 
 namespace ConsoleApp.Core.Entities;

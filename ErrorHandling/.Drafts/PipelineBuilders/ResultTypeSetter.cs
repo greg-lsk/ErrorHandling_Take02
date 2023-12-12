@@ -3,7 +3,7 @@
 
 namespace ErrorHandling.Drafts.PipelineBuilders;
 
-public static class CtorPipe
+public class ResultTypeSetter<TSubject>
 {
-    public static PipeBuilder<T1, T2, T3> WithSignature<T1, T2, T3>() => new();
+    public ResultPipeBuilderArgsTwo<T1, T2, TSubject> WithParams<T1, T2>() => new();
 }
