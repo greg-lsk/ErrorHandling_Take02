@@ -5,5 +5,5 @@ namespace ErrorHandling.Drafts.PipelineBuilders;
 
 public class ResultTypeSetter<TSubject>
 {
-    public ResultPipeBuilderArgsTwo<T1, T2, TSubject> WithParamTypes<T1, T2>() => new();
+    public ResultPipeBuilder02<T1, T2, TSubject> WithParamTypes<T1, T2>() => new();
 }

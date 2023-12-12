@@ -12,6 +12,8 @@ public class Result<T> : IResult
         Value = value;
     }
 
+    public Result() { }
+
     public Result(ResultReport report)
     {
         Value = default;

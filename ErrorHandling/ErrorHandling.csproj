@@ -13,10 +13,15 @@
     <Compile Include=".Drafts\ErrorTracing\Identification\RefId.cs" />
     <Compile Include=".Drafts\ErrorTracing\Identification\ValueId.cs" />
     <Compile Include=".Drafts\ErrorTracing\ObjectRegistry.cs" />
-    <Compile Include=".Drafts\PipelineBuilders\ResultPipeBuilders\ResultPipeBuilderArgsTwo.cs" />
+    <Compile Include=".Drafts\PipelineBuilders\ResultPipeBuilders\ResultPipeBuilder02.cs" />
     <Compile Include=".Drafts\PipelineBuilders\Pipe.cs" />
     <Compile Include=".Drafts\PipelineBuilders\ResultTypeSetter.cs" />
     <Compile Include=".Drafts\PipelineBuilders\VoidPipeBuilders\VoidPipeBuilderArgsThree.cs" />
+    <Compile Include=".Drafts\PipelineTemplates\Abstractions\IPipeBuilder.cs" />
+    <Compile Include=".Drafts\PipelineTemplates\Abstractions\PipeTemplate.cs" />
+    <Compile Include=".Drafts\PipelineTemplates\ResultPipeTemplate01.cs" />
+    <Compile Include=".Drafts\PipelineTemplates\ResultPipeTemplate00.cs" />
+    <Compile Include=".Drafts\PipelineTemplates\ResultPipeTemplate02.cs" />
     <Compile Include=".Drafts\Pipelining\ResultDelegates.cs" />
   </ItemGroup>
 
