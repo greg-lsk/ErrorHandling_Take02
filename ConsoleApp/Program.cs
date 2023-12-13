@@ -2,8 +2,10 @@
 
 using ErrorHandling;
 using ConsoleApp.Application.Pipelines;
+using ConsoleApp.Core.Entities;
 
 
+PersonActions personActions = new();
 EvaluationConfig evaluationConfig = new();
 
 using (var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole()))
@@ -13,7 +15,7 @@ using (var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole())
     string firstName = "Gregory";
     string lastName = "Liaskas";
 
-    var person = PersonActions.Create(firstName, lastName);
+    var person = new Person(firstName, lastName);
 
-    PersonActions.Rename(person, p => ref p.FirstName, "Gregg");
+    personActions.Rename(person, p => ref p.FirstName, "Gregg");
 }
