@@ -1,6 +1,4 @@
-﻿using ErrorHandling.ResultUtilities;
-
-namespace ErrorHandling;
+﻿namespace ErrorHandling;
 
 public readonly partial struct EvaluationState
 {

@@ -1,4 +1,6 @@
-﻿namespace ErrorHandling.ResultUtilities;
+﻿using ErrorHandling.ResultUtilities;
+
+namespace ErrorHandling;
 
 public class VoidResult : IResult
 {

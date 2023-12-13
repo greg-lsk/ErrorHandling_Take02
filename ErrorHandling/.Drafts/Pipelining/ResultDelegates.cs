@@ -1,7 +1,4 @@
-﻿using ErrorHandling.ResultUtilities;
-
-
-namespace ErrorHandling.Drafts.Pipelining;
+﻿namespace ErrorHandling.Drafts.Pipelining;
 
 public delegate Result<TSubject> ResultPipe<TSubject>();
 public delegate Result<TSubject> ResultPipe<T1, TSubject>(T1 arg01);
