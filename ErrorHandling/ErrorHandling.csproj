@@ -23,6 +23,7 @@
     <Compile Include=".Drafts\PipelineTemplates\ResultPipeTemplate00.cs" />
     <Compile Include=".Drafts\PipelineTemplates\ResultPipeTemplate02.cs" />
     <Compile Include=".Drafts\Pipelining\ResultDelegates.cs" />
+    <Compile Include=".Drafts\ResultPipelining\ResultPipe.cs" />
     <Compile Include=".Drafts\ResultsHub.cs" />
   </ItemGroup>
 

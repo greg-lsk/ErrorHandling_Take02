@@ -15,5 +15,5 @@ using (var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole())
 
     var person = PersonActions.Create(firstName, lastName);
 
-    person.ActUpon(p => PersonActions.Rename(p, p => ref p.FirstName, "Gregg"));
+    PersonActions.Rename(person, p => ref p.FirstName, "Gregg");
 }
