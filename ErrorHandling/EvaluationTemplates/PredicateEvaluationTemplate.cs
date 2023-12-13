@@ -1,7 +1,7 @@
-﻿using ErrorHandling.Templates.Abstractions;
+﻿using ErrorHandling.EvaluationTemplates.Abstractions;
 
 
-namespace ErrorHandling.Templates;
+namespace ErrorHandling.EvaluationTemplates;
 
 internal class PredicateEvaluationTemplate<TSubject> : EvaluationTemplate<TSubject>
 {
@@ -18,7 +18,7 @@ internal class PredicateEvaluationTemplate<TSubject> : EvaluationTemplate<TSubje
     }
 
 
-    internal override Evaluation<TSubject> ConstructEvaluation() => 
+    internal override Evaluation<TSubject> ConstructEvaluation() =>
     (TSubject subject, in EvaluationState state) =>
     {
         var successfulEvaluation = _predicate.Invoke(subject);

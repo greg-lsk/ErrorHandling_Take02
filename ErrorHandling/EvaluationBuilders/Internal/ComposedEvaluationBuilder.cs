@@ -1,8 +1,8 @@
-﻿using ErrorHandling.Templates;
-using ErrorHandling.Templates.Abstractions;
+﻿using ErrorHandling.EvaluationTemplates;
+using ErrorHandling.EvaluationTemplates.Abstractions;
 
 
-namespace ErrorHandling.Builders.Internal;
+namespace ErrorHandling.EvaluationBuilders.Internal;
 
 internal sealed class ComposedEvaluationBuilder<TSubject, TProperty> : EvaluationBuilder<TSubject>
 {

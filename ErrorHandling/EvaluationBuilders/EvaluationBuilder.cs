@@ -1,7 +1,7 @@
-﻿using ErrorHandling.Templates.Abstractions;
+﻿using ErrorHandling.EvaluationTemplates.Abstractions;
 
 
-namespace ErrorHandling.Builders;
+namespace ErrorHandling.EvaluationBuilders;
 
 public abstract class EvaluationBuilder<TSubject>
 {
@@ -17,7 +17,7 @@ public abstract class EvaluationBuilder<TSubject>
         return this;
     }
 
-    public EvaluationBuilder<TSubject> WithSuccessTag(Enum? successTag) 
+    public EvaluationBuilder<TSubject> WithSuccessTag(Enum? successTag)
     {
         _successTag = successTag;
         return this;

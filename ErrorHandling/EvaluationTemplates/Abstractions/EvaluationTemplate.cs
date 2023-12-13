@@ -1,4 +1,4 @@
-﻿namespace ErrorHandling.Templates.Abstractions;
+﻿namespace ErrorHandling.EvaluationTemplates.Abstractions;
 
 internal abstract class EvaluationTemplate<TSubject>
 {

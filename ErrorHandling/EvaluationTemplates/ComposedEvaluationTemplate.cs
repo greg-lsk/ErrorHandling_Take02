@@ -1,7 +1,7 @@
-﻿using ErrorHandling.Templates.Abstractions;
+﻿using ErrorHandling.EvaluationTemplates.Abstractions;
 
 
-namespace ErrorHandling.Templates;
+namespace ErrorHandling.EvaluationTemplates;
 
 internal class ComposedEvaluationTemplate<TSubject, TProperty> : EvaluationTemplate<TSubject>
 {
@@ -14,7 +14,7 @@ internal class ComposedEvaluationTemplate<TSubject, TProperty> : EvaluationTempl
                                         IncomplianceSeverity severity,
                                         Enum? successTag,
                                         Enum? incomplianceTag)
-        :base(severity, successTag, incomplianceTag)
+        : base(severity, successTag, incomplianceTag)
     {
         _selector = selector;
         _evaluation = evaluation;

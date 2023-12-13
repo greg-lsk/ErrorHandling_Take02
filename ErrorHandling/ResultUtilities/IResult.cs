@@ -1,7 +1,7 @@
 ﻿namespace ErrorHandling.ResultUtilities;
 
-public interface IResult
+internal interface IResult
 {
-    public bool IsValid { get; }
+    internal bool IsValid { get; }
     internal ResultReport? Report { get; }
 }

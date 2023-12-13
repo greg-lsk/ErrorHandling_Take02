@@ -1,8 +1,8 @@
-﻿using ErrorHandling.Templates;
-using ErrorHandling.Templates.Abstractions;
+﻿using ErrorHandling.EvaluationTemplates;
+using ErrorHandling.EvaluationTemplates.Abstractions;
 
 
-namespace ErrorHandling.Builders;
+namespace ErrorHandling.EvaluationBuilders;
 
 public sealed class BatchEvaluationBuilder<TSubject> : EvaluationBuilder<TSubject>
 {
@@ -34,7 +34,7 @@ public sealed class BatchEvaluationBuilder<TSubject> : EvaluationBuilder<TSubjec
         if (NumberOfEvaluations == 0)
             throw new InvalidOperationException("at least one evaluation must be provided");
 
-        if (_severity is null) 
+        if (_severity is null)
             throw new InvalidOperationException("severity must be provided");
 
         return new BatchEvaluationTemplate<TSubject>

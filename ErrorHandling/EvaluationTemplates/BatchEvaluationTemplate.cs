@@ -1,7 +1,7 @@
-﻿using ErrorHandling.Templates.Abstractions;
+﻿using ErrorHandling.EvaluationTemplates.Abstractions;
 
 
-namespace ErrorHandling.Templates;
+namespace ErrorHandling.EvaluationTemplates;
 
 internal class BatchEvaluationTemplate<TSubject> : EvaluationTemplate<TSubject>
 {
@@ -13,8 +13,8 @@ internal class BatchEvaluationTemplate<TSubject> : EvaluationTemplate<TSubject>
         ? _shortCircuitEvaluations![index]
         : _regularEvaluations![index - ShortCircuitCount];
 
-    private int ShortCircuitCount => (_shortCircuitEvaluations?.Length ?? 0);
-    private int RegularCount => (_regularEvaluations?.Length ?? 0);
+    private int ShortCircuitCount => _shortCircuitEvaluations?.Length ?? 0;
+    private int RegularCount => _regularEvaluations?.Length ?? 0;
     private int Length => ShortCircuitCount + RegularCount;
 
 
