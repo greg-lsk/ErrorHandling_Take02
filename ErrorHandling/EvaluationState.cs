@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 using ErrorHandling.Reporting;
 using ErrorHandling.Reporting.Logging;
@@ -8,17 +7,14 @@ using ErrorHandling.Reporting.CallStackInfo;
 
 namespace ErrorHandling;
 
-public readonly partial struct EvaluationState
+public readonly struct EvaluationState
 {
-    private ILogger Logger { get; }
-
     internal EvaluationInfo TraceInfo { get; }
     internal EvaluationReport Report { get; }
 
 
-    internal EvaluationState(ILogger logger, string callerMemberName, int callerLineNumber)
+    internal EvaluationState(string callerMemberName, int callerLineNumber)
     {
-        Logger = logger;
         Report = new();
         TraceInfo = new(callerMemberName, callerLineNumber);
     }
@@ -29,6 +25,6 @@ public readonly partial struct EvaluationState
         [CallerLineNumber] int callerLineNumber = 0)
     {
         var logger = EvaluationLogger.Get<TCategory>();
-        return new(logger, callerMemberName, callerLineNumber);
+        return new(callerMemberName, callerLineNumber);
     }
 }
