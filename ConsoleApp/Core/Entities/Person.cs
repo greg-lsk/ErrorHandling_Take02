@@ -20,7 +20,7 @@ public class Person
     }
 
 
-    public void Rename(NameSelector selector,string newValue)
+    public void Rename(NameSelector selector, string newValue)
         =>  selector.Invoke(this) = new Name(newValue);
     
     public void Print() => Console.WriteLine($"{_firstName} {_lastName}");

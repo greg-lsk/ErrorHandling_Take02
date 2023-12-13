@@ -9,7 +9,7 @@ public ref struct ResultPipeBuilder02<T1, T2, TSubject>
     private Evaluation<T1>? _arg01Evaluation;
     private Evaluation<T2>? _arg02Evaluation;
 
-    private Func<T1, T2, TSubject>? _pipeDelegate;
+    private Func<T1, T2, TSubject>? _pipeDelegate; 
 
 
     public ResultPipeBuilder02<T1, T2, TSubject> GuardFirstArgument(Evaluation<T1> evaluation)

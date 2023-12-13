@@ -11,6 +11,7 @@ internal class ResultPipeTemplate02<T1, T2, TSubject> : IPipeBuilder
     private readonly Evaluation<T1>? _arg01Evaluation;
     private readonly Evaluation<T2>? _arg02Evaluation;
 
+    private readonly object[] _preconditions;
 
     internal ResultPipeTemplate02(Func<T1, T2, TSubject> pipeDelegate,
                                   Evaluation<T1>? arg01Evaluation,

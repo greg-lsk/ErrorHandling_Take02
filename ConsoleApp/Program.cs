@@ -13,7 +13,7 @@ using (var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole())
     string firstName = "Gregory";
     string lastName = "Liaskas";
 
-    var person = PersonPipe.Create(firstName, lastName);
+    var person = PersonActions.Create(firstName, lastName);
 
-    person.ActUpon(p => PersonPipe.Rename(p, p => ref p.FirstName, "Gregg"));
+    person.ActUpon(p => PersonActions.Rename(p, p => ref p.FirstName, "Gregg"));
 }
