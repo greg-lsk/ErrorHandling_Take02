@@ -9,6 +9,6 @@ public class VoidResult : IResult
     public bool IsValid => Report is null;
 
 
-    public VoidResult() => Report = null;
-    public VoidResult(ResultReport report) => Report = report;
+    internal VoidResult() => Report = null;
+    internal VoidResult(ResultReport report) => Report = report;
 }
