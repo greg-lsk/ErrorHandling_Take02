@@ -1,14 +1,25 @@
-﻿namespace ErrorHandling;
+﻿using System.Runtime.CompilerServices;
+
+
+namespace ErrorHandling;
 
 public class ResultPipe
 {
     private readonly EvaluationState _state;
-    private bool _operationSeized = false;
+    private bool _operationSeized;
 
 
-    public static ResultPipe Initialize()
+    private ResultPipe(string callerMemberName, int callerLineNumber)
     {
-        var pipeline = new ResultPipe();
+        _state = new(callerMemberName, callerLineNumber);
+        _operationSeized = false;
+    }
+
+    public static ResultPipe Initialize(
+        [CallerMemberName] string callerMemberName = null!,
+        [CallerLineNumber] int callerLineNumber = 0)
+    {
+        var pipeline = new ResultPipe(callerMemberName, callerLineNumber);
         return pipeline;
     }
 

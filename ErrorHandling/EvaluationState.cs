@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-using ErrorHandling.Reporting;
-using ErrorHandling.Reporting.Logging;
+﻿using ErrorHandling.Reporting;
 using ErrorHandling.Reporting.CallStackInfo;
 
 
@@ -17,14 +14,5 @@ public readonly struct EvaluationState
     {
         Report = new();
         TraceInfo = new(callerMemberName, callerLineNumber);
-    }
-
-
-    public static EvaluationState Init<TCategory>(
-        [CallerMemberName] string callerMemberName = null!,
-        [CallerLineNumber] int callerLineNumber = 0)
-    {
-        var logger = EvaluationLogger.Get<TCategory>();
-        return new(callerMemberName, callerLineNumber);
     }
 }
