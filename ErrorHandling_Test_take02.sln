@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ErrorHandling", "ErrorHandl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmarks", "Benchmarks", "{7AF1A577-D4AC-4F1B-9216-B5AF771E7D60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErrorHandling.Benchmark", "Benchmarks\ErrorHandling.Benchmark\ErrorHandling.Benchmark.csproj", "{A2E59AE1-CE5F-41BF-9E78-CD8BB7C9E3E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ErrorHandling.Benchmark", "Benchmarks\ErrorHandling.Benchmark\ErrorHandling.Benchmark.csproj", "{A2E59AE1-CE5F-41BF-9E78-CD8BB7C9E3E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CarBooking", "CarBooking", "{F18B07F3-999C-44C0-93B5-7E858ABE1E00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{86749017-DCFD-4F5B-91F1-49507248B1A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,12 +37,17 @@ Global
 		{A2E59AE1-CE5F-41BF-9E78-CD8BB7C9E3E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2E59AE1-CE5F-41BF-9E78-CD8BB7C9E3E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2E59AE1-CE5F-41BF-9E78-CD8BB7C9E3E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86749017-DCFD-4F5B-91F1-49507248B1A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86749017-DCFD-4F5B-91F1-49507248B1A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86749017-DCFD-4F5B-91F1-49507248B1A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86749017-DCFD-4F5B-91F1-49507248B1A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A2E59AE1-CE5F-41BF-9E78-CD8BB7C9E3E9} = {7AF1A577-D4AC-4F1B-9216-B5AF771E7D60}
+		{86749017-DCFD-4F5B-91F1-49507248B1A6} = {F18B07F3-999C-44C0-93B5-7E858ABE1E00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C0597EF0-D0FE-4484-BC89-9DBC57B14914}
