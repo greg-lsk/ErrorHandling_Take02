@@ -6,20 +6,15 @@ namespace Domain.Comparers.EquityDelegates;
 
 public static class CarInventoryEquity
 {
-    public static readonly HashDelegate<CarInventory> IdHash =
-        c => HashCode.Combine(c.Id);
-
-    public static readonly EquityDelegate<CarInventory> ById =
-    (left, right) =>
-    {
-        if (Equity.Inferred(left, right)) return true;
-
-        return left!.Id == right!.Id;
-    };
+    public static HashDelegate<CarInventory> IdHash => BaseEntityEquity.IdHash;
+    public static EquityDelegate<CarInventory> ById => BaseEntityEquity.ById;
 
     
     public static readonly HashDelegate<CarInventory> ValueHash =
-        c => HashCode.Combine(c.Id, CarEquity.ValueHash(c.Car));
+        c => HashCode.Combine(c.Id,
+                              c.AvailableUnits,
+                              CarEquity.ValueHash(c.Car));
+
 
     public static readonly EquityDelegate<CarInventory> ByValue =
     (left, right) =>
@@ -27,6 +22,7 @@ public static class CarInventoryEquity
         if (Equity.Inferred(left, right)) return true;
 
         return left!.AvailableUnits == right!.AvailableUnits &&
+               BaseEntityEquity.ByValue(left, right) &&
                CarEquity.ByValue(left.Car, right.Car);
     };
 }
