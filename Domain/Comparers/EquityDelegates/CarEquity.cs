@@ -12,7 +12,7 @@ public static class CarEquity
 
     public static readonly Hash<Car> ValueHash =
         c => HashCode.Combine(c.Id,
-                              UtillitySpecsEquity.ValueHash(c.UtillitySpecs),
+                              UtilitySpecsEquity.ValueHash(c.UtillitySpecs),
                               DrivetrainEquity.ValueHash(c.Drivetrain));
 
 
@@ -22,7 +22,7 @@ public static class CarEquity
         if (Equity.Inferred(left, right)) return true;
 
         return BaseEntityEquity.ByValue(left, right) &&
-               UtillitySpecsEquity.ByValue(left!.UtillitySpecs, right!.UtillitySpecs) &&
+               UtilitySpecsEquity.ByValue(left!.UtillitySpecs, right!.UtillitySpecs) &&
                DrivetrainEquity.ByValue(left.Drivetrain, right.Drivetrain);
     };
 }

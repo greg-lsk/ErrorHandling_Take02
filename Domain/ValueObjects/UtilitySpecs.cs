@@ -1,6 +1,6 @@
 ﻿namespace Domain.ValueObjects;
 
-public class UtillitySpecs(int numberOfSeats,
+public class UtilitySpecs(int numberOfSeats,
                            int numberOfDoors,
                            double bootCapacity)
 {
