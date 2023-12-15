@@ -4,7 +4,8 @@ using Domain.Entities.Abstractions;
 
 namespace Domain.Entities;
 
-public class Car(CarModel model) : BaseEntity
+public class Car(UtillitySpecs utillitySpecs, Drivetrain drivetrain) : BaseEntity
 {
-    public CarModel Model { get; } = model;
+    public UtillitySpecs UtillitySpecs { get; } = utillitySpecs;
+    public Drivetrain Drivetrain { get; } = drivetrain;
 }

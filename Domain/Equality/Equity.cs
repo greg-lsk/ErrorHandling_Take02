@@ -9,6 +9,6 @@ public static class Equity
         return false;
     }
 
-    public static EqualityComparer<T> Comparer<T>(EquityDelegate<T> equals, HashDelegate<T> hash)
+    public static EqualityComparer<T> Comparer<T>(Equity<T> equals, Hash<T> hash)
         => EqualityComparer<T>.Create(equals.Invoke, hash.Invoke);
 }

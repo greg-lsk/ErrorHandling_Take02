@@ -6,10 +6,10 @@ namespace Domain.Comparers.EquityDelegates;
 
 public static class DrivetrainEquity
 {
-    public static readonly HashDelegate<Drivetrain> ValueHash =
+    public static readonly Hash<Drivetrain> ValueHash =
         (d) => HashCode.Combine(d.EngineType, d.Transmission);
 
-    public static readonly EquityDelegate<Drivetrain> ByValue =
+    public static readonly Equity<Drivetrain> ByValue =
     (left, right) =>
     {
         if (Equity.Inferred(left, right)) return true;

@@ -6,17 +6,17 @@ namespace Domain.Comparers.EquityDelegates;
 
 public static class CarInventoryEquity
 {
-    public static HashDelegate<CarInventory> IdHash => BaseEntityEquity.IdHash;
-    public static EquityDelegate<CarInventory> ById => BaseEntityEquity.ById;
+    public static Hash<CarInventory> IdHash => BaseEntityEquity.IdHash;
+    public static Equity<CarInventory> ById => BaseEntityEquity.ById;
 
     
-    public static readonly HashDelegate<CarInventory> ValueHash =
+    public static readonly Hash<CarInventory> ValueHash =
         c => HashCode.Combine(c.Id,
                               c.AvailableUnits,
                               CarEquity.ValueHash(c.Car));
 
 
-    public static readonly EquityDelegate<CarInventory> ByValue =
+    public static readonly Equity<CarInventory> ByValue =
     (left, right) =>
     {
         if (Equity.Inferred(left, right)) return true;
