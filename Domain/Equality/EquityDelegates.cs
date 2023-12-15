@@ -1,4 +1,4 @@
-﻿namespace Domain.Equality.Delegates;
+﻿namespace Domain.Equality;
 
 
 public delegate bool EquityDelegate<T>(T? left, T? right);

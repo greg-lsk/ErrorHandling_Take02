@@ -1,8 +1,8 @@
-﻿using Domain.Entities;
-using Domain.Equality.Delegates;
+﻿using Domain.Equality;
+using Domain.Entities;
 
 
-namespace Domain.Equality;
+namespace Domain.Comparers.EquityDelegates;
 
 public static class CarInventoryEquity
 {
@@ -17,9 +17,7 @@ public static class CarInventoryEquity
         return left!.Id == right!.Id;
     };
 
-    public static readonly EqualityComparer<CarInventory> IdComparer = Equity.Comparer(ById, IdHash);
-
-
+    
     public static readonly HashDelegate<CarInventory> ValueHash =
         c => HashCode.Combine(c.Id, CarEquity.ValueHash(c.Car));
 
@@ -31,6 +29,4 @@ public static class CarInventoryEquity
         return left!.AvailableUnits == right!.AvailableUnits &&
                CarEquity.ByValue(left.Car, right.Car);
     };
-
-    public static readonly EqualityComparer<CarInventory> ValueComparer = Equity.Comparer(ByValue, ValueHash);
 }

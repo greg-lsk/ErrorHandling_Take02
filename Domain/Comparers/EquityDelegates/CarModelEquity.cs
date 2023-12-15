@@ -1,8 +1,8 @@
-﻿using Domain.ValueObjects;
-using Domain.Equality.Delegates;
+﻿using Domain.Equality;
+using Domain.ValueObjects;
 
 
-namespace Domain.Equality;
+namespace Domain.Comparers.EquityDelegates;
 
 public static class CarModelEquity
 {
@@ -13,10 +13,9 @@ public static class CarModelEquity
     public static readonly EquityDelegate<CarModel> ByValue =
     (left, right) =>
     {
-        if (ReferenceEquals(left, right)) return true;
-        if (left is null || right is null) return false;
+        if (Equity.Inferred(left, right)) return true;
 
-        return left.Name == right.Name &&
+        return left!.Name == right!.Name &&
                ModelSpecificationEquity.ByValue(left.Specifications, right.Specifications);
     };
 }

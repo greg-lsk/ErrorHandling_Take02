@@ -1,8 +1,8 @@
-﻿using Domain.ValueObjects;
-using Domain.Equality.Delegates;
+﻿using Domain.Equality;
+using Domain.ValueObjects;
 
 
-namespace Domain.Equality;
+namespace Domain.Comparers.EquityDelegates;
 
 public static class DrivetrainEquity
 {
@@ -12,10 +12,9 @@ public static class DrivetrainEquity
     public static readonly EquityDelegate<Drivetrain> ByValue =
     (left, right) =>
     {
-        if (ReferenceEquals(left, right)) return true;
-        if (left is null || right is null) return false;
+        if (Equity.Inferred(left, right)) return true;
 
-        return left.EngineType == right.EngineType &&
+        return left!.EngineType == right!.EngineType &&
                left.Transmission == right.Transmission;
     };
 }

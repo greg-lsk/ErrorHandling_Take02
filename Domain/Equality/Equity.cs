@@ -1,7 +1,4 @@
-﻿using Domain.Equality.Delegates;
-
-
-namespace Domain.Equality;
+﻿namespace Domain.Equality;
 public static class Equity
 {
     public static bool Inferred<T>(T? left, T? right)
