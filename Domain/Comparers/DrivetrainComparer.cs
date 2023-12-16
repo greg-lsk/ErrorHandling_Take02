@@ -1,6 +1,6 @@
 ﻿using Domain.Equality;
-using Domain.ValueObjects;
 using Domain.Comparers.EquityDelegates;
+using Domain.ValueObjects.DrivetrainHierarchy.Abstractions;
 
 
 namespace Domain.Comparers;

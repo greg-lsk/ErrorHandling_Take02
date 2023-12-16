@@ -1,5 +1,6 @@
 ﻿using Domain.ValueObjects;
 using Domain.Entities.Abstractions;
+using Domain.ValueObjects.DrivetrainHierarchy.Abstractions;
 
 
 namespace Domain.Entities;
