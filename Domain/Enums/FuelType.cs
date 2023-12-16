@@ -3,5 +3,8 @@
 public enum FuelType
 {
     Petrol,
-    Diesel
+    Diesel,
+    LNG,
+    CNG,
+    Electricity
 }
