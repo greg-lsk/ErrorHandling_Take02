@@ -1,8 +1,8 @@
 ﻿using Domain.Enums;
 using Domain.Interfaces;
+using Domain.ValueObjects.Abstractions;
 
 namespace Domain.ValueObjects;
-
 public class PowerUnit(
     PowerUnitRole role,
     FuelTank[] tanks,
@@ -13,7 +13,7 @@ public class PowerUnit(
 {
     public PowerUnitRole Role { get; } = role;
 
-    public FuelTank[] Tanks { get; } = tanks;
+    public EnergyTank[] Tanks { get; } = tanks;
 
     public double? PowerOutput { get; } = powerOutput;
 
@@ -25,7 +25,8 @@ public class PowerUnit(
 
     public bool NeedsCharging() => Tanks.Any(t => t is IPlugable);
 
-    public bool CanBePoweredBy(FuelType fuelType) => Tanks.Any(t => t.FuelType == fuelType);
-    public bool CanOnlyBePoweredBy(FuelType fuelType) => Tanks.All(t => t.FuelType == fuelType);
+    public IEnumerable<FuelType> EssentialFuelTypes() => Tanks.Where(t => t.HoldsEssentialFuel)
+                                                              .Select(t => t.FuelType);
+
 
 }

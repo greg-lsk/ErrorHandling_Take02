@@ -17,7 +17,7 @@ public class Car(
     public bool CanBeDrivenOn(FuelType fuelType) =>
         PowerUnits.Any(unit =>
         unit.Role == PowerUnitRole.Propulsion &&
-        unit.CanBePoweredBy(fuelType));
+        unit.EssentialFuelTypes().Contains(fuelType));
 
     public bool NeedsCharging() => PowerUnits.Any(unit => unit.NeedsCharging());
 }

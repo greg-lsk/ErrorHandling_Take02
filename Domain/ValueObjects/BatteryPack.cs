@@ -3,9 +3,15 @@ using Domain.Interfaces;
 using Domain.ValueObjects.Abstractions;
 
 namespace Domain.ValueObjects;
-public class BatteryPack(double capacity) : EnergyTank(capacity), IPlugable
+public class BatteryPack(
+    double capacity,
+    bool holdsEssentialFuel,
+    double chargeDuration)
+    : EnergyTank(
+        fuelType: FuelType.Electricity, 
+        capacity, 
+        needsManualRefill: true, 
+        holdsEssentialFuel), IPlugable
 {
-    public override FuelType FuelType => FuelType.Electricity;
-
-    public double ChargeDuration { get; }
+    public double ChargeDuration { get; } = chargeDuration;
 }
