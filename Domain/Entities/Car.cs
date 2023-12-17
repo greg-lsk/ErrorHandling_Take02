@@ -13,11 +13,4 @@ public class Car(
     public Transmission Transmission { get; } = transmission;
     public UtilitySpecs UtillitySpecs { get; } = utillitySpecs;
 
-
-    public bool CanBeDrivenOn(FuelType fuelType) =>
-        PowerUnits.Any(unit =>
-        unit.Role == PowerUnitRole.Propulsion &&
-        unit.EssentialFuelTypes().Contains(fuelType));
-
-    public bool NeedsCharging() => PowerUnits.Any(unit => unit.NeedsCharging());
 }

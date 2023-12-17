@@ -5,13 +5,11 @@ using Domain.ValueObjects.Abstractions;
 namespace Domain.ValueObjects;
 public class BatteryPack(
     double capacity,
-    bool holdsEssentialFuel,
     double chargeDuration)
     : EnergyTank(
         fuelType: FuelType.Electricity, 
         capacity, 
-        needsManualRefill: true, 
-        holdsEssentialFuel), IPlugable
+        needsManualRefill: true), IPlugable
 {
     public double ChargeDuration { get; } = chargeDuration;
 }
