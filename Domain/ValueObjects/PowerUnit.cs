@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using Domain.Interfaces;
 
 namespace Domain.ValueObjects;
 
@@ -20,4 +21,11 @@ public class PowerUnit(
     public double? Efficiency { get; } = efficiency;
 
     public double? Range { get; } = range;
+
+
+    public bool NeedsCharging() => Tanks.Any(t => t is IPlugable);
+
+    public bool CanBePoweredBy(FuelType fuelType) => Tanks.Any(t => t.FuelType == fuelType);
+    public bool CanOnlyBePoweredBy(FuelType fuelType) => Tanks.All(t => t.FuelType == fuelType);
+
 }
